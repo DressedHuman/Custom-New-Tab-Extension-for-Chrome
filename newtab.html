@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-fixed">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Tab - Motiur Rahman Mizan</title>
+
+  <!-- Tailwind CSS -->
+  <link href="./output.css" rel="stylesheet" />
+
+  <!-- Google Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-6">
+
+  <input id="focus-capture" type="text"
+    style="position:absolute; opacity:0; height:0; width:0; border:0; pointer-events:none;" />
+
+  <div
+    class="custom-bg shadow-2xl rounded-3xl overflow-hidden max-w-3xl w-full flex flex-col items-center p-10 space-y-10 fade-in">
+
+    <!-- Profile Section -->
+    <div class="flex flex-col items-center text-center space-y-4 fade-in">
+      <div
+        class="h-44 w-44 rounded-full overflow-hidden shadow-lg border-4 border-black-400 transition-transform transform hover:scale-105 hover:shadow-black-300/50 duration-300">
+        <img src="profile_photo.png" alt="Photo of Motiur Rahman Mizan" class="object-cover h-full w-full" />
+      </div>
+      <h1 class="text-4xl font-bold">Motiur Rahman Mizan</h1>
+      <h2 class="text-2xl font-medium opacity-80">Programmer</h2>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="w-full flex flex-col items-center fade-in [animation-delay:0.4s]">
+      <form action="https://www.startpage.com/sp/search" method="get" class="relative w-full max-w-2xl">
+        <input type="text" name="query" placeholder="Search with StartPage..."
+          class="search-input w-full rounded-full py-4 pl-6 pr-14 text-lg border-4 border-yellow-400 shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+          autofocus />
+        <button type="submit"
+          class="absolute right-2 top-1/2 -translate-y-1/2 bg-yellow-400 hover:bg-yellow-500 text-white rounded-full p-3 transition flex items-center justify-center"
+          aria-label="Search">
+          <span class="material-symbols-outlined text-[26px]">search</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Theme Switch Button -->
+  <button id="themeSwitcher" class="theme-button">Switch Theme</button>
+
+  <!-- External JavaScript -->
+  <script src="main.js"></script>
+</body>
+
+</html>
