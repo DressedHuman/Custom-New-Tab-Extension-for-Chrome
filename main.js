@@ -1,13 +1,13 @@
-// Focus search bar when user presses "/"
+// Focus search bar on "/"
 document.addEventListener("keydown", (e) => {
   if (e.key === "/") {
     e.preventDefault();
-    const input = document.querySelector("input[name='query']");
+    const input = document.querySelector(".search-input");
     if (input) input.focus();
   }
 });
 
-// Theme switching system
+// Themes
 const themes = [
   "theme-fixed",
   "theme-synthwave",

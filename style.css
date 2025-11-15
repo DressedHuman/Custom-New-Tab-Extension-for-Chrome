@@ -1,281 +1,220 @@
+/* Base */
 body {
-    font-family: 'Inter', sans-serif;
-    transition: background 0.6s ease, color 0.4s ease;
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    overflow: hidden;
+    color: white;
 }
 
-.custom-bg {
-    transition: background 0.6s ease, color 0.4s ease, border-color 0.4s ease;
+/* Background Gradient + Particles */
+.bg-overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 20% 30%, #ffffff22, transparent 60%),
+        radial-gradient(circle at 80% 70%, #ffffff11, transparent 50%);
+    z-index: -2;
 }
 
-.fade-in {
-    animation: fadeIn 0.8s ease-out both;
+.particles {
+    position: fixed;
+    inset: 0;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><circle cx="10" cy="10" r="1" fill="white" opacity="0.06"/></svg>');
+    background-size: 200px 200px;
+    opacity: 0.7;
+    z-index: -1;
 }
 
-@keyframes fadeIn {
+/* Glass Card */
+.glass-card {
+    width: 450px;
+    padding: 45px 50px 60px 50px;
+    margin: auto;
+    margin-top: 7vh;
+    border-radius: 40px;
+
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(22px);
+    box-shadow:
+        0 8px 40px rgba(0, 0, 0, 0.35),
+        inset 0 0 30px rgba(255, 255, 255, 0.12);
+
+    text-align: center;
+    animation: fadeUp 0.8s ease-out;
+}
+
+/* Fade Animation */
+@keyframes fadeUp {
     from {
         opacity: 0;
-        transform: translateY(15px);
+        transform: translateY(25px) scale(0.97);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 }
 
-.search-input,
+/* Profile Section */
+.avatar-frame {
+    width: 150px;
+    height: 150px;
+    margin: auto;
+    border-radius: 50%;
+    padding: 4px;
+    background: linear-gradient(145deg, #ffffff55, #00000033);
+    box-shadow:
+        0 6px 25px rgba(0, 0, 0, 0.5),
+        0 0 10px rgba(255, 255, 255, 0.15);
+    transition: transform .3s ease;
+}
+
+.avatar-frame:hover {
+    transform: scale(1.05);
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.profile-name {
+    margin-top: 20px;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.profile-title {
+    margin-top: 5px;
+    opacity: 0.8;
+    font-size: 18px;
+}
+
+/* Search Bar */
+.search-wrapper {
+    margin-top: 35px;
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    padding: 16px 20px 16px 55px;
+    font-size: 17px;
+    border-radius: 40px;
+    border: 2px solid transparent;
+
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    color: white;
+
+    transition: 0.3s;
+}
+
 .search-input::placeholder {
-    transition: color 0.3s ease, background 0.3s ease;
+    color: #e6e6e6cc;
 }
 
-/* ----------------------------- */
-/* 1. FIXED THEME                */
-/* ----------------------------- */
+.search-input:focus {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* Search Icon */
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: 18px;
+    transform: translateY(-50%);
+    font-size: 26px;
+    opacity: 0.9;
+}
+
+/* Floating Theme Orb */
+.theme-orb {
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+
+    padding: 12px;
+    border-radius: 50%;
+    border: none;
+
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(8px);
+
+    cursor: pointer;
+    transition: 0.3s ease;
+
+    box-shadow:
+        0 0 20px rgba(255, 255, 255, 0.25),
+        inset 0 0 20px rgba(255, 255, 255, 0.15);
+}
+
+.theme-orb:hover {
+    transform: scale(1.12) rotate(8deg);
+    box-shadow:
+        0 0 30px rgba(255, 255, 255, 0.45),
+        inset 0 0 30px rgba(255, 255, 255, 0.18);
+}
+
+.theme-orb span {
+    font-size: 26px;
+    color: white;
+}
+
+/* ========================= */
+/* THEME COLORS (All 10)     */
+/* ========================= */
+
 .theme-fixed body {
-    background: linear-gradient(180deg, #dddeff 0%, #5f5f7f 40%, #3f3f5f 70%, #000000 100%);
-    color: #f1f2ff;
+    background: linear-gradient(135deg, #4d5478, #171b25, #000);
 }
 
-.theme-fixed .custom-bg {
-    background: #2a2b40;
-    color: #ffffff;
-}
-
-.theme-fixed .search-input {
-    color: #fff;
-    background: #3b3b55cc;
-}
-
-.theme-fixed .search-input::placeholder {
-    color: #ddddff;
-}
-
-/* ----------------------------- */
-/* 2. SYNTHWAVE                  */
-/* ----------------------------- */
 .theme-synthwave body {
-    background: linear-gradient(180deg, #2b0057, #ff0095 45%, #ff6f00);
-    color: #fff4ff;
+    background: linear-gradient(135deg, #23003a, #ad008d, #ff4b00);
 }
 
-.theme-synthwave .custom-bg {
-    background: #45006b;
-    border: 2px solid #ff6dfd;
-    color: #ffeaff;
-}
-
-.theme-synthwave .search-input {
-    color: #ffeaff;
-    background: #32004ecc;
-}
-
-.theme-synthwave .search-input::placeholder {
-    color: #ffb8f7;
-}
-
-/* ----------------------------- */
-/* 3. FOREST                     */
-/* ----------------------------- */
 .theme-forest body {
-    background: linear-gradient(180deg, #003300, #005500, #002800);
-    color: #e9ffe9;
+    background: linear-gradient(135deg, #022b02, #024702, #011f01);
 }
 
-.theme-forest .custom-bg {
-    background: #0c3a0c;
-    border: 1px solid #44ff44;
-    color: #d8ffd8;
-}
-
-.theme-forest .search-input {
-    color: #e9ffe9;
-    background: #0f4010cc;
-}
-
-.theme-forest .search-input::placeholder {
-    color: #b9ffb9;
-}
-
-/* ----------------------------- */
-/* 4. OCEANIC                    */
-/* ----------------------------- */
 .theme-oceanic body {
-    background: linear-gradient(180deg, #001f3f, #003f7f, #001a33);
-    color: #d8eeff;
+    background: linear-gradient(135deg, #001a36, #003f7a, #001426);
 }
 
-.theme-oceanic .custom-bg {
-    background: #022b47;
-    border: 1px solid #4ab8ff;
-    color: #e7f6ff;
-}
-
-.theme-oceanic .search-input {
-    color: #e7f6ff;
-    background: #013459cc;
-}
-
-.theme-oceanic .search-input::placeholder {
-    color: #9fd5ff;
-}
-
-/* ----------------------------- */
-/* 5. VOLCANO                    */
-/* ----------------------------- */
 .theme-volcano body {
-    background: linear-gradient(180deg, #330000, #7a0000, #ff4500);
-    color: #ffe5d9;
+    background: linear-gradient(135deg, #330000, #7a0000, #ff4500);
 }
 
-.theme-volcano .custom-bg {
-    background: #4a0a00;
-    border: 2px solid #ff6633;
-    color: #ffd6c3;
-}
-
-.theme-volcano .search-input {
-    color: #ffe5d9;
-    background: #531000cc;
-}
-
-.theme-volcano .search-input::placeholder {
-    color: #ffb39b;
-}
-
-/* ----------------------------- */
-/* 6. LUNAR                      */
-/* ----------------------------- */
 .theme-lunar body {
-    background: linear-gradient(180deg, #1c1c1c, #3a3a3a, #cfcfcf);
-    color: #f5f5f5;
+    background: linear-gradient(135deg, #111111, #3a3a3a, #d7d7d7);
 }
 
-.theme-lunar .custom-bg {
-    background: #2c2c2c;
-    border: 1px solid #e0e0e0;
-    color: #fafafa;
-}
-
-.theme-lunar .search-input {
-    color: #f5f5f5;
-    background: #2a2a2acc;
-}
-
-.theme-lunar .search-input::placeholder {
-    color: #bbbbbb;
-}
-
-/* ----------------------------- */
-/* 7. CANDY                      */
-/* ----------------------------- */
 .theme-candy body {
-    background: linear-gradient(180deg, #ffe6f2, #ffd6e7, #ffeef9);
-    color: #52344f;
+    background: linear-gradient(135deg, #ffe6f2, #ffd6e7, #ffeef9);
 }
 
-.theme-candy .custom-bg {
-    background: #ffffffdd;
-    border: 1px solid #ffb6d9;
-    color: #5b3a55;
-}
-
-.theme-candy .search-input {
-    color: #52344f;
-    background: #ffffffdd;
-}
-
-.theme-candy .search-input::placeholder {
-    color: #b36b9c;
-}
-
-/* ----------------------------- */
-/* 8. TERMINAL                   */
-/* ----------------------------- */
 .theme-terminal body {
-    background: #000;
-    color: #00ff66;
+    background: black;
 }
 
-.theme-terminal .custom-bg {
-    background: #020202;
-    border: 1px solid #00cc55;
-    color: #00ff66;
+.theme-sakura body {
+    background: linear-gradient(135deg, #ffe4ec, #ffccd9, #ffb3c8);
 }
 
+.theme-royal body {
+    background: linear-gradient(135deg, #0b1026, #1b2656, #0a0f24);
+}
+
+/* Input Text & Placeholder — Auto Theme */
 .theme-terminal .search-input {
     color: #00ff66;
-    background: #001100;
+    background: #001100dd !important;
 }
 
 .theme-terminal .search-input::placeholder {
     color: #00cc55;
-}
-
-/* ----------------------------- */
-/* 9. SAKURA                     */
-/* ----------------------------- */
-.theme-sakura body {
-    background: linear-gradient(180deg, #ffe4ec, #ffccd9, #ffb3c8);
-    color: #5c3041;
-}
-
-.theme-sakura .custom-bg {
-    background: #fff7f9;
-    border: 1px solid #ff8fb0;
-    color: #5c3041;
-}
-
-.theme-sakura .search-input {
-    color: #5c3041;
-    background: #fff4f8cc;
-}
-
-.theme-sakura .search-input::placeholder {
-    color: #cc6f8f;
-}
-
-/* ----------------------------- */
-/* 10. ROYAL                     */
-/* ----------------------------- */
-.theme-royal body {
-    background: linear-gradient(180deg, #0b1026, #1b2656, #0a0f24);
-    color: #f6e8c7;
-}
-
-.theme-royal .custom-bg {
-    background: #111832;
-    border: 1px solid #d4b766;
-    color: #f7ebca;
-}
-
-.theme-royal .search-input {
-    color: #f6e8c7;
-    background: #1a2244cc;
-}
-
-.theme-royal .search-input::placeholder {
-    color: #d4b766;
-}
-
-/* ----------------------------- */
-/* Theme Switch Button           */
-/* ----------------------------- */
-.theme-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #000000aa;
-    color: white;
-    padding: 12px 18px;
-    border-radius: 30px;
-    font-size: 14px;
-    cursor: pointer;
-    backdrop-filter: blur(6px);
-    transition: 0.2s;
-    z-index: 999;
-}
-
-.theme-button:hover {
-    transform: scale(1.1);
-    opacity: 0.85;
 }
