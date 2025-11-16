@@ -24,68 +24,81 @@ const themes = [
   "theme-royal",
 ];
 
-// BLURRED NEON BLOBS BACKGROUND WITH INDIVIDUAL DRIFT AND COLOR SHIFT
+// BLURRED NEON BLOBS BACKGROUND WITH FLOAT, PULSE, AND ROTATION
 const blobColors = [
-  [0, 255, 247], // neon
-  [82, 255, 106], // forest
-  [255, 58, 31], // volcano
-  [110, 160, 255], // royal
-  [255, 174, 111], // sunset
-  [201, 201, 201], // lunar
+    [0, 255, 247],   // neon
+    [82, 255, 106],  // forest
+    [255, 58, 31],   // volcano
+    [110, 160, 255], // royal
+    [255, 174, 111], // sunset
+    [201, 201, 201]  // lunar
 ];
 
 const blobs = [];
 
 for (let i = 0; i < 5; i++) {
-  const blob = document.createElement("div");
-  blob.classList.add("neon-blob");
+    const blob = document.createElement("div");
+    blob.classList.add("neon-blob");
 
-  // Random initial color
-  const color = blobColors[Math.floor(Math.random() * blobColors.length)];
-  blob.dataset.color = color.join(",");
-  blob.style.background = `rgba(${color.join(",")},0.3)`;
+    // Random initial color
+    const color = blobColors[Math.floor(Math.random() * blobColors.length)];
+    blob.dataset.color = color.join(",");
+    blob.style.background = `rgba(${color.join(",")},0.3)`;
 
-  // Random initial position
-  blob.x = Math.random() * window.innerWidth;
-  blob.y = Math.random() * window.innerHeight;
+    // Random initial position
+    blob.x = Math.random() * window.innerWidth;
+    blob.y = Math.random() * window.innerHeight;
 
-  // Random drift speed and direction
-  blob.vx = (Math.random() - 0.5) * 0.3; // horizontal speed
-  blob.vy = (Math.random() - 0.5) * 0.3; // vertical speed
+    // Random drift speed and direction
+    blob.vx = (Math.random() - 0.5) * 0.3;
+    blob.vy = (Math.random() - 0.5) * 0.3;
 
-  blob.style.left = blob.x + "px";
-  blob.style.top = blob.y + "px";
-
-  document.body.appendChild(blob);
-  blobs.push(blob);
-}
-
-// Animate blobs
-function animateBlobs() {
-  blobs.forEach((blob) => {
-    // Update position
-    blob.x += blob.vx;
-    blob.y += blob.vy;
-
-    // Bounce off edges
-    if (blob.x < 0 || blob.x > window.innerWidth) blob.vx *= -1;
-    if (blob.y < 0 || blob.y > window.innerHeight) blob.vy *= -1;
+    // Rotation and scale
+    blob.angle = Math.random() * 360;
+    blob.vr = (Math.random() - 0.5) * 0.1; // rotation speed
+    blob.scale = 1 + Math.random() * 0.1;   // initial scale
+    blob.vs = (Math.random() - 0.5) * 0.002; // scale speed
 
     blob.style.left = blob.x + "px";
     blob.style.top = blob.y + "px";
-  });
 
-  requestAnimationFrame(animateBlobs);
+    document.body.appendChild(blob);
+    blobs.push(blob);
+};
+
+// Animate blobs
+function animateBlobs() {
+    blobs.forEach((blob) => {
+        // Update position
+        blob.x += blob.vx;
+        blob.y += blob.vy;
+
+        // Bounce off edges
+        if (blob.x < 0 || blob.x > window.innerWidth) blob.vx *= -1;
+        if (blob.y < 0 || blob.y > window.innerHeight) blob.vy *= -1;
+
+        // Update rotation and scale
+        blob.angle += blob.vr;
+        blob.scale += blob.vs;
+        if (blob.scale > 1.2 || blob.scale < 0.8) blob.vs *= -1;
+
+        blob.style.left = blob.x + "px";
+        blob.style.top = blob.y + "px";
+        blob.style.transform = `translate(-50%, -50%) rotate(${blob.angle}deg) scale(${blob.scale})`;
+    });
+
+    requestAnimationFrame(animateBlobs);
 }
 animateBlobs();
 
 // Animate color changes every 5 seconds
 setInterval(() => {
-  blobs.forEach((blob) => {
-    const newColor = blobColors[Math.floor(Math.random() * blobColors.length)];
-    blob.style.background = `rgba(${newColor.join(",")},0.3)`;
-  });
+    blobs.forEach((blob) => {
+        const newColor = blobColors[Math.floor(Math.random() * blobColors.length)];
+        blob.style.background = `rgba(${newColor.join(",")},0.3)`;
+    });
 }, 5000);
+
 
 // Apply theme correctly
 function applyTheme(theme) {
