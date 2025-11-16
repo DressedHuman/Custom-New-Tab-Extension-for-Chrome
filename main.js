@@ -24,7 +24,7 @@ const themes = [
   "theme-royal",
 ];
 
-// BLURRED NEON BLOBS BACKGROUND WITH COLOR SHIFT
+// BLURRED NEON BLOBS BACKGROUND WITH INDIVIDUAL DRIFT AND COLOR SHIFT
 const blobColors = [
   [0, 255, 247], // neon
   [82, 255, 106], // forest
@@ -39,23 +39,53 @@ const blobs = [];
 for (let i = 0; i < 5; i++) {
   const blob = document.createElement("div");
   blob.classList.add("neon-blob");
+
+  // Random initial color
   const color = blobColors[Math.floor(Math.random() * blobColors.length)];
   blob.dataset.color = color.join(",");
   blob.style.background = `rgba(${color.join(",")},0.3)`;
-  blob.style.left = Math.random() * window.innerWidth + "px";
-  blob.style.top = Math.random() * window.innerHeight + "px";
-  blob.style.animationDuration = 15 + Math.random() * 20 + "s";
+
+  // Random initial position
+  blob.x = Math.random() * window.innerWidth;
+  blob.y = Math.random() * window.innerHeight;
+
+  // Random drift speed and direction
+  blob.vx = (Math.random() - 0.5) * 0.3; // horizontal speed
+  blob.vy = (Math.random() - 0.5) * 0.3; // vertical speed
+
+  blob.style.left = blob.x + "px";
+  blob.style.top = blob.y + "px";
+
   document.body.appendChild(blob);
   blobs.push(blob);
 }
 
-// Animate color changes
+// Animate blobs
+function animateBlobs() {
+  blobs.forEach((blob) => {
+    // Update position
+    blob.x += blob.vx;
+    blob.y += blob.vy;
+
+    // Bounce off edges
+    if (blob.x < 0 || blob.x > window.innerWidth) blob.vx *= -1;
+    if (blob.y < 0 || blob.y > window.innerHeight) blob.vy *= -1;
+
+    blob.style.left = blob.x + "px";
+    blob.style.top = blob.y + "px";
+  });
+
+  requestAnimationFrame(animateBlobs);
+}
+animateBlobs();
+
+// Animate color changes every 5 seconds
 setInterval(() => {
   blobs.forEach((blob) => {
     const newColor = blobColors[Math.floor(Math.random() * blobColors.length)];
-    blob.style.background = `rgba(${newColor.join(",")},0.9)`;
+    blob.style.background = `rgba(${newColor.join(",")},0.3)`;
   });
-}, 5000); // change color every 5 seconds
+}, 5000);
 
 // Apply theme correctly
 function applyTheme(theme) {
