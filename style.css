@@ -1,220 +1,369 @@
-/* Base */
-body {
+/* RESET */
+* {
     margin: 0;
-    font-family: "Inter", sans-serif;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
     overflow: hidden;
-    color: white;
+    font-family: "Inter", sans-serif;
+    transition: background 0.8s ease, color 0.5s ease;
+    color: var(--accent);
 }
 
-/* Background Gradient + Particles */
-.bg-overlay {
+/* ------------------------------
+   THEME VARIABLE SYSTEM
+--------------------------------*/
+
+:root {
+    --accent: #00fff7;
+    --accent-dim: #00fff788;
+    --accent-bg: #00fff710;
+    --glow: #00fff7aa;
+}
+
+html.theme-neon {
+    --accent: #00fff7;
+    background: linear-gradient(120deg, #0f0c29, #302b63, #24243e);
+}
+
+html.theme-sunset {
+    --accent: #ffae6f;
+    background: linear-gradient(120deg, #ff6f91, #ff9671, #ffc75f);
+}
+
+html.theme-forest {
+    --accent: #52ff6a;
+    background: linear-gradient(120deg, #022b02, #024702, #011f01);
+}
+
+html.theme-cyber {
+    --accent: #00eaff;
+    background: linear-gradient(120deg, #0ff, #06f, #00f);
+}
+
+html.theme-volcano {
+    --accent: #ff3b1f;
+    background: linear-gradient(120deg, #330000, #7a0000, #ff4500);
+}
+
+html.theme-lunar {
+    --accent: #c9c9c9;
+    background: linear-gradient(120deg, #111, #444, #ccc);
+}
+
+html.theme-royal {
+    --accent: #6ea0ff;
+    background: linear-gradient(120deg, #0b1026, #1b2656, #0a0f24);
+}
+
+/* ------------------------------
+   LOADING SCREEN
+--------------------------------*/
+
+#loading-screen {
     position: fixed;
     inset: 0;
-    background: radial-gradient(circle at 20% 30%, #ffffff22, transparent 60%),
-        radial-gradient(circle at 80% 70%, #ffffff11, transparent 50%);
-    z-index: -2;
+    background: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
 }
 
-.particles {
-    position: fixed;
-    inset: 0;
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><circle cx="10" cy="10" r="1" fill="white" opacity="0.06"/></svg>');
-    background-size: 200px 200px;
-    opacity: 0.7;
-    z-index: -1;
+.loading-text {
+    font-size: 32px;
+    color: cyan;
+    letter-spacing: 3px;
+    font-family: monospace;
+    display: flex;
 }
 
-/* Glass Card */
-.glass-card {
-    width: 450px;
-    padding: 45px 50px 60px 50px;
-    margin: auto;
-    margin-top: 7vh;
-    border-radius: 40px;
-
-    background: rgba(255, 255, 255, 0.10);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    backdrop-filter: blur(22px);
-    box-shadow:
-        0 8px 40px rgba(0, 0, 0, 0.35),
-        inset 0 0 30px rgba(255, 255, 255, 0.12);
-
-    text-align: center;
-    animation: fadeUp 0.8s ease-out;
+.loading-text .char {
+    opacity: 0;
+    animation: load-fade 1s forwards;
 }
 
-/* Fade Animation */
-@keyframes fadeUp {
+@keyframes load-fade {
     from {
         opacity: 0;
-        transform: translateY(25px) scale(0.97);
+        transform: translateY(10px);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
     }
 }
 
-/* Profile Section */
+/* ------------------------------
+   PARTICLES
+--------------------------------*/
+
+#particleCanvas {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+}
+
+/* ------------------------------
+   BACKGROUND
+--------------------------------*/
+
+.neon-bg {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, var(--accent-bg), transparent 60%);
+    animation: bg-pulse 6s infinite alternate;
+    z-index: -3;
+}
+
+@keyframes bg-pulse {
+    from {
+        filter: blur(20px);
+        opacity: .5;
+    }
+
+    to {
+        filter: blur(40px);
+        opacity: 1;
+    }
+}
+
+.light-streaks {
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(45deg,
+            var(--accent-dim) 0px,
+            var(--accent-dim) 1px,
+            transparent 1px,
+            transparent 4px);
+    animation: streak 8s linear infinite;
+    z-index: -2;
+}
+
+@keyframes streak {
+    to {
+        background-position: 200px 200px;
+    }
+}
+
+/* ------------------------------
+   MAIN CARD
+--------------------------------*/
+
+.cyber-card {
+    width: min(420px, 90%);
+    padding: 50px 40px;
+    margin: 16vh auto 0;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(25px);
+    border-radius: 30px;
+    text-align: center;
+    animation: fadeUp 0.8s ease forwards;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ------------------------------
+   PROFILE
+--------------------------------*/
+
 .avatar-frame {
-    width: 150px;
-    height: 150px;
+    width: 140px;
+    height: 140px;
     margin: auto;
-    border-radius: 50%;
     padding: 4px;
-    background: linear-gradient(145deg, #ffffff55, #00000033);
-    box-shadow:
-        0 6px 25px rgba(0, 0, 0, 0.5),
-        0 0 10px rgba(255, 255, 255, 0.15);
-    transition: transform .3s ease;
+    border-radius: 50%;
+    background: linear-gradient(45deg, var(--accent), var(--accent-dim));
+    box-shadow: 0 0 25px var(--glow);
+    transition: .3s;
 }
 
 .avatar-frame:hover {
-    transform: scale(1.05);
-}
-
-.avatar-img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
+    transform: scale(1.1);
 }
 
 .profile-name {
     margin-top: 20px;
-    font-size: 32px;
+    font-size: 30px;
     font-weight: 800;
-    letter-spacing: -0.5px;
+    color: var(--accent);
+}
+
+/* Neon typing */
+.neon-type::after {
+    content: attr(data-text);
+    animation: neon-typing 3.2s steps(30) forwards;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid cyan;
+}
+
+@keyframes neon-typing {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 100%;
+    }
 }
 
 .profile-title {
+    opacity: 0.7;
     margin-top: 5px;
-    opacity: 0.8;
-    font-size: 18px;
 }
 
-/* Search Bar */
-.search-wrapper {
-    margin-top: 35px;
+/* ------------------------------
+   SEARCH + SUGGESTIONS
+--------------------------------*/
+
+.search-orb-wrapper {
     position: relative;
+    margin-top: 40px;
 }
 
-.search-input {
+.search-orb-input {
     width: 100%;
-    padding: 16px 20px 16px 55px;
-    font-size: 17px;
-    border-radius: 40px;
-    border: 2px solid transparent;
-
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(12px);
-    color: white;
-
-    transition: 0.3s;
+    padding: 16px 20px 16px 52px;
+    border-radius: 50px;
+    border: 2px solid var(--accent-dim);
+    background: var(--accent-bg);
+    color: var(--accent);
+    outline: none;
+    transition: .25s;
 }
 
-.search-input::placeholder {
-    color: #e6e6e6cc;
-}
-
-.search-input:focus {
-    border-color: #fff;
-    background: rgba(255, 255, 255, 0.25);
-}
-
-/* Search Icon */
+/* icon */
 .search-icon {
     position: absolute;
     top: 50%;
     left: 18px;
     transform: translateY(-50%);
-    font-size: 26px;
-    opacity: 0.9;
+    color: var(--accent);
 }
 
-/* Floating Theme Orb */
+.suggestions {
+    margin-top: 10px;
+    background: rgba(0, 0, 0, .35);
+    border-radius: 20px;
+    padding: 10px;
+    backdrop-filter: blur(10px);
+    display: none;
+}
+
+.suggestions.show {
+    display: block;
+}
+
+/* ------------------------------
+   THEME ORB + RADIAL MENU
+--------------------------------*/
+
 .theme-orb {
     position: fixed;
     right: 25px;
     bottom: 25px;
-
-    padding: 12px;
-    border-radius: 50%;
+    padding: 14px;
     border: none;
-
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(8px);
-
+    border-radius: 50%;
+    background: var(--accent-bg);
     cursor: pointer;
-    transition: 0.3s ease;
-
-    box-shadow:
-        0 0 20px rgba(255, 255, 255, 0.25),
-        inset 0 0 20px rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 20px var(--glow);
 }
 
-.theme-orb:hover {
-    transform: scale(1.12) rotate(8deg);
-    box-shadow:
-        0 0 30px rgba(255, 255, 255, 0.45),
-        inset 0 0 30px rgba(255, 255, 255, 0.18);
+#theme-wheel {
+    position: fixed;
+    right: 90px;
+    bottom: 80px;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    pointer-events: none;
 }
 
-.theme-orb span {
-    font-size: 26px;
-    color: white;
+.theme-node {
+    width: 35px;
+    height: 35px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: absolute;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: .4s;
+    pointer-events: auto;
 }
 
-/* ========================= */
-/* THEME COLORS (All 10)     */
-/* ========================= */
-
-.theme-fixed body {
-    background: linear-gradient(135deg, #4d5478, #171b25, #000);
+.theme-wheel.active .theme-node {
+    opacity: 1;
+    transform: scale(1);
 }
 
-.theme-synthwave body {
-    background: linear-gradient(135deg, #23003a, #ad008d, #ff4b00);
+/* ------------------------------
+   FULLSCREEN TERMINAL (H2 Style)
+--------------------------------*/
+
+#terminal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 5, 20, 0.95);
+    color: cyan;
+    font-family: monospace;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.theme-forest body {
-    background: linear-gradient(135deg, #022b02, #024702, #011f01);
+#terminal.hidden {
+    display: none;
 }
 
-.theme-oceanic body {
-    background: linear-gradient(135deg, #001a36, #003f7a, #001426);
+.terminal-content {
+    width: 90%;
+    max-width: 900px;
+    height: 80%;
+    border: 2px solid cyan;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: 0 0 20px cyan;
 }
 
-.theme-volcano body {
-    background: linear-gradient(135deg, #330000, #7a0000, #ff4500);
+#terminal-output {
+    white-space: pre-wrap;
+    font-size: 18px;
 }
 
-.theme-lunar body {
-    background: linear-gradient(135deg, #111111, #3a3a3a, #d7d7d7);
+.terminal-input-line {
+    display: flex;
+    margin-top: 10px;
 }
 
-.theme-candy body {
-    background: linear-gradient(135deg, #ffe6f2, #ffd6e7, #ffeef9);
+.terminal-input-line .prompt {
+    margin-right: 10px;
+    color: cyan;
 }
 
-.theme-terminal body {
-    background: black;
-}
-
-.theme-sakura body {
-    background: linear-gradient(135deg, #ffe4ec, #ffccd9, #ffb3c8);
-}
-
-.theme-royal body {
-    background: linear-gradient(135deg, #0b1026, #1b2656, #0a0f24);
-}
-
-/* Input Text & Placeholder — Auto Theme */
-.theme-terminal .search-input {
-    color: #00ff66;
-    background: #001100dd !important;
-}
-
-.theme-terminal .search-input::placeholder {
-    color: #00cc55;
+#terminal-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    color: cyan;
+    font-size: 18px;
 }

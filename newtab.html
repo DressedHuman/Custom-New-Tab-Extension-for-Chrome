@@ -1,50 +1,95 @@
 <!DOCTYPE html>
-<html lang="en" class="theme-fixed">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Motiur Rahman Mizan</title>
+  <title>Motiur Rahman Mizan - Cyber UI</title>
 
-  <link href="./output.css" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- Fonts & Icons -->
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
-  <!-- Animated Background -->
-  <div class="bg-overlay"></div>
-  <div class="particles"></div>
-
-  <!-- Main Card -->
-  <div class="glass-card fade-in">
-
-    <!-- Profile -->
-    <div class="profile-section">
-      <div class="avatar-frame">
-        <img src="profile_photo.png" class="avatar-img" alt="Profile" />
-      </div>
-
-      <h1 class="profile-name">Motiur Rahman Mizan</h1>
-      <h2 class="profile-title">Programmer</h2>
+  <!-- LOADING SCREEN -->
+  <div id="loading-screen">
+    <div class="loading-text">
+      <span class="char">B</span>
+      <span class="char">O</span>
+      <span class="char">O</span>
+      <span class="char">T</span>
+      <span class="char">I</span>
+      <span class="char">N</span>
+      <span class="char">G</span>
+      <span class="char">.</span>
+      <span class="char">.</span>
+      <span class="char">.</span>
     </div>
-
-    <!-- Search -->
-    <form action="https://www.startpage.com/sp/search" method="get" class="search-wrapper">
-      <span class="material-symbols-rounded search-icon">search</span>
-      <input type="text" name="query" placeholder="Search the web…" autofocus class="search-input" />
-    </form>
-
   </div>
 
-  <!-- Theme Switch Floating Orb -->
-  <button id="themeSwitcher" class="theme-orb">
+  <!-- Animated Neon Background -->
+  <div class="neon-bg"></div>
+  <div class="light-streaks"></div>
+
+  <!-- PARTICLE LAYER -->
+  <canvas id="particleCanvas"></canvas>
+
+  <main class="cyber-card">
+
+    <!-- Avatar & Info -->
+    <section class="profile-section">
+      <div class="avatar-frame">
+        <img src="profile_photo.png" alt="Profile" class="avatar-img" />
+      </div>
+
+      <h1 class="profile-name neon-type" data-text="Motiur Rahman Mizan"></h1>
+      <h2 class="profile-title">Programmer</h2>
+    </section>
+
+    <!-- Search -->
+    <div class="search-container">
+      <form class="search-orb-wrapper" action="https://www.startpage.com/sp/search" method="GET">
+        <span class="material-symbols-rounded search-icon">search</span>
+        <input type="text" name="query" placeholder="Search the cyber web…" class="search-orb-input"
+          autocomplete="off" />
+      </form>
+
+      <!-- Suggestions -->
+      <div class="suggestions" id="suggestions"></div>
+    </div>
+
+  </main>
+
+  <!-- THEME ORB (opens radial menu) -->
+  <button id="themeSwitcher" class="theme-orb" aria-label="Switch Theme">
     <span class="material-symbols-rounded">brightness_6</span>
   </button>
+
+  <!-- RADIAL THEME MENU -->
+  <div id="theme-wheel" class="theme-wheel hidden">
+    <div class="theme-node" data-theme="theme-neon"></div>
+    <div class="theme-node" data-theme="theme-sunset"></div>
+    <div class="theme-node" data-theme="theme-forest"></div>
+    <div class="theme-node" data-theme="theme-cyber"></div>
+    <div class="theme-node" data-theme="theme-volcano"></div>
+    <div class="theme-node" data-theme="theme-lunar"></div>
+    <div class="theme-node" data-theme="theme-royal"></div>
+  </div>
+
+  <!-- FULLSCREEN TERMINAL -->
+  <div id="terminal" class="terminal hidden">
+    <div class="terminal-content">
+      <div id="terminal-output"></div>
+      <div class="terminal-input-line">
+        <span class="prompt">></span>
+        <input type="text" id="terminal-input" autocomplete="off" />
+      </div>
+    </div>
+  </div>
 
   <script src="main.js"></script>
 </body>
