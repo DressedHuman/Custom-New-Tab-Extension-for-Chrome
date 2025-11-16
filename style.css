@@ -57,42 +57,6 @@ html.theme-royal {
     background: linear-gradient(120deg, #0b1026, #1b2656, #0a0f24);
 }
 
-/* LOADING SCREEN */
-#loading-screen {
-    position: fixed;
-    inset: 0;
-    background: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999999;
-}
-
-.loading-text {
-    font-size: 32px;
-    color: cyan;
-    letter-spacing: 3px;
-    font-family: monospace;
-    display: flex;
-}
-
-.loading-text .char {
-    opacity: 0;
-    animation: load-fade 1s forwards;
-}
-
-@keyframes load-fade {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 /* PARTICLES */
 #particleCanvas {
     position: fixed;

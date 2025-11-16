@@ -13,17 +13,6 @@ const terminalOutput = document.getElementById("terminal-output");
 let spaceHeld = false;
 let spaceTimer = null;
 
-// LOADING SCREEN
-window.addEventListener("load", () => {
-  setTimeout(() => {
-    const loader = document.getElementById("loading-screen");
-    loader.style.opacity = "0";
-    setTimeout(() => {
-      loader.style.display = "none";
-    }, 500);
-  }, 1200);
-});
-
 // THEME SYSTEM
 const themes = [
   "theme-forest",
