@@ -52,10 +52,13 @@ themeBtn.addEventListener("click", () => {
   themeWheel.classList.toggle("active");
 
   const nodes = themeWheel.querySelectorAll(".theme-node");
-  const radius = 90;
+
+  // 🔥 RADIUS REDUCED FROM 90 → 70
+  const radius = 70;
 
   nodes.forEach((node, i) => {
     const angle = (i / nodes.length) * (Math.PI * 2);
+
     if (themeWheel.classList.contains("active")) {
       node.style.left = 110 + Math.cos(angle) * radius + "px";
       node.style.top = 110 + Math.sin(angle) * radius + "px";
@@ -92,9 +95,11 @@ searchInput.addEventListener("input", () => {
   const matches = presetSuggestions.filter((s) =>
     s.includes(val.toLowerCase())
   );
+
   suggestions.innerHTML = matches
     .map((m) => `<div class='s-item'>${m}</div>`)
     .join("");
+
   suggestions.classList.add("show");
 
   document.querySelectorAll(".s-item").forEach((item) => {
@@ -129,14 +134,18 @@ window.addEventListener("mousemove", (e) => {
 
 function particleLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   particles.forEach((p, i) => {
     p.x += p.vx;
     p.y += p.vy;
     p.life--;
+
     ctx.fillStyle = `rgba(0,255,255,${p.life / 60})`;
     ctx.fillRect(p.x, p.y, 2, 2);
+
     if (p.life <= 0) particles.splice(i, 1);
   });
+
   requestAnimationFrame(particleLoop);
 }
 particleLoop();
@@ -148,6 +157,7 @@ function openTerminal() {
   terminalOutput.innerHTML +=
     "Cyber Terminal v1.0\nType 'help' for commands.\n\n";
 }
+
 function closeTerminal() {
   terminal.classList.add("hidden");
   terminalInput.blur();
@@ -157,33 +167,38 @@ terminalInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     const cmd = terminalInput.value.trim();
     terminalOutput.innerHTML += "> " + cmd + "\n";
-    if (cmd === "help")
+
+    if (cmd === "help") {
       terminalOutput.innerHTML +=
         "Commands: theme <name>, search <query>, clear, exit\n\n";
-    else if (cmd.startsWith("theme ")) {
+    } else if (cmd.startsWith("theme ")) {
       applyTheme("theme-" + cmd.split(" ")[1]);
       terminalOutput.innerHTML += "Theme changed.\n\n";
     } else if (cmd.startsWith("search ")) {
       const q = cmd.replace("search ", "");
       window.location.href =
         "https://startpage.com/sp/search?query=" + encodeURIComponent(q);
-    } else if (cmd === "clear") terminalOutput.innerHTML = "";
-    else if (cmd === "exit") closeTerminal();
-    else terminalOutput.innerHTML += "Unknown command.\n\n";
+    } else if (cmd === "clear") {
+      terminalOutput.innerHTML = "";
+    } else if (cmd === "exit") {
+      closeTerminal();
+    } else {
+      terminalOutput.innerHTML += "Unknown command.\n\n";
+    }
+
     terminalInput.value = "";
     terminalOutput.scrollTop = terminalOutput.scrollHeight;
   }
 });
 
-// SPACE HOLD TO OPEN TERMINAL
+// HOLD SPACE TO OPEN TERMINAL
 window.addEventListener("keydown", (e) => {
   if (e.code === "Space" && !spaceHeld) {
     spaceHeld = true;
-    spaceTimer = setTimeout(() => {
-      openTerminal();
-    }, 2000);
+    spaceTimer = setTimeout(openTerminal, 2000);
   }
 });
+
 window.addEventListener("keyup", (e) => {
   if (e.code === "Space") {
     spaceHeld = false;
