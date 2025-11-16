@@ -16,35 +16,43 @@ let spaceTimer = null;
 // LOADING SCREEN
 window.addEventListener("load", () => {
   setTimeout(() => {
-    document.getElementById("loading-screen").style.opacity = "0";
+    const loader = document.getElementById("loading-screen");
+    loader.style.opacity = "0";
     setTimeout(() => {
-      document.getElementById("loading-screen").style.display = "none";
+      loader.style.display = "none";
     }, 500);
   }, 1200);
 });
 
 // THEME SYSTEM
 const themes = [
-  "theme-neon",
-  "theme-sunset",
   "theme-forest",
-  "theme-cyber",
   "theme-volcano",
-  "theme-lunar",
   "theme-royal",
+  "theme-aurora",
+  "theme-ocean",
+  "theme-sakura",
 ];
 
+// Apply theme correctly
 function applyTheme(theme) {
-  themes.forEach((t) => root.classList.remove(t));
+  // Remove any class starting with "theme-"
+  root.classList.forEach((cls) => {
+    if (cls.startsWith("theme-")) {
+      root.classList.remove(cls);
+    }
+  });
+  // Apply new theme
   root.classList.add(theme);
   localStorage.setItem("selectedTheme", theme);
 }
 
+// Load saved theme
 function loadTheme() {
   const saved = localStorage.getItem("selectedTheme");
-  applyTheme(themes.includes(saved) ? saved : "theme-neon");
+  if (themes.includes(saved)) applyTheme(saved);
+  else applyTheme("theme-forest");
 }
-
 loadTheme();
 
 // RADIAL THEME MENU
@@ -52,13 +60,10 @@ themeBtn.addEventListener("click", () => {
   themeWheel.classList.toggle("active");
 
   const nodes = themeWheel.querySelectorAll(".theme-node");
-
-  // 🔥 RADIUS REDUCED FROM 90 → 70
-  const radius = 70;
+  const radius = 75; // slightly smaller radius
 
   nodes.forEach((node, i) => {
     const angle = (i / nodes.length) * (Math.PI * 2);
-
     if (themeWheel.classList.contains("active")) {
       node.style.left = 110 + Math.cos(angle) * radius + "px";
       node.style.top = 110 + Math.sin(angle) * radius + "px";
@@ -93,13 +98,12 @@ searchInput.addEventListener("input", () => {
   }
 
   const matches = presetSuggestions.filter((s) =>
-    s.includes(val.toLowerCase())
+    s.toLowerCase().includes(val.toLowerCase())
   );
 
   suggestions.innerHTML = matches
     .map((m) => `<div class='s-item'>${m}</div>`)
     .join("");
-
   suggestions.classList.add("show");
 
   document.querySelectorAll(".s-item").forEach((item) => {
@@ -134,18 +138,14 @@ window.addEventListener("mousemove", (e) => {
 
 function particleLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
   particles.forEach((p, i) => {
     p.x += p.vx;
     p.y += p.vy;
     p.life--;
-
     ctx.fillStyle = `rgba(0,255,255,${p.life / 60})`;
     ctx.fillRect(p.x, p.y, 2, 2);
-
     if (p.life <= 0) particles.splice(i, 1);
   });
-
   requestAnimationFrame(particleLoop);
 }
 particleLoop();
@@ -157,7 +157,6 @@ function openTerminal() {
   terminalOutput.innerHTML +=
     "Cyber Terminal v1.0\nType 'help' for commands.\n\n";
 }
-
 function closeTerminal() {
   terminal.classList.add("hidden");
   terminalInput.blur();
@@ -172,33 +171,35 @@ terminalInput.addEventListener("keydown", (e) => {
       terminalOutput.innerHTML +=
         "Commands: theme <name>, search <query>, clear, exit\n\n";
     } else if (cmd.startsWith("theme ")) {
-      applyTheme("theme-" + cmd.split(" ")[1]);
-      terminalOutput.innerHTML += "Theme changed.\n\n";
+      const name = cmd.split(" ")[1];
+      if (themes.includes("theme-" + name)) {
+        applyTheme("theme-" + name);
+        terminalOutput.innerHTML += "Theme changed.\n\n";
+      } else {
+        terminalOutput.innerHTML += "Theme not found.\n\n";
+      }
     } else if (cmd.startsWith("search ")) {
       const q = cmd.replace("search ", "");
       window.location.href =
         "https://startpage.com/sp/search?query=" + encodeURIComponent(q);
-    } else if (cmd === "clear") {
-      terminalOutput.innerHTML = "";
-    } else if (cmd === "exit") {
-      closeTerminal();
-    } else {
-      terminalOutput.innerHTML += "Unknown command.\n\n";
-    }
+    } else if (cmd === "clear") terminalOutput.innerHTML = "";
+    else if (cmd === "exit") closeTerminal();
+    else terminalOutput.innerHTML += "Unknown command.\n\n";
 
     terminalInput.value = "";
     terminalOutput.scrollTop = terminalOutput.scrollHeight;
   }
 });
 
-// HOLD SPACE TO OPEN TERMINAL
+// SPACE HOLD TO OPEN TERMINAL
 window.addEventListener("keydown", (e) => {
   if (e.code === "Space" && !spaceHeld) {
     spaceHeld = true;
-    spaceTimer = setTimeout(openTerminal, 2000);
+    spaceTimer = setTimeout(() => {
+      openTerminal();
+    }, 2000);
   }
 });
-
 window.addEventListener("keyup", (e) => {
   if (e.code === "Space") {
     spaceHeld = false;

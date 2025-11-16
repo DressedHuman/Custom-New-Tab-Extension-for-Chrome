@@ -222,14 +222,8 @@ html.theme-royal {
     pointer-events: none;
 }
 
-/* the FIX is here — using ID selector */
-#theme-wheel.active .theme-node {
-    opacity: 1;
-    transform: scale(1);
-    pointer-events: auto;
-}
-
-.theme-node {
+/* FIXED: Starting collapsed position added */
+#theme-wheel .theme-node {
     width: 35px;
     height: 35px;
     border-radius: 50%;
@@ -238,6 +232,10 @@ html.theme-royal {
     transform: scale(0.5);
     transition: .4s, left .4s, top .4s;
     pointer-events: none;
+
+    /* REQUIRED default coords */
+    left: 110px;
+    top: 110px;
 }
 
 /* Node colors */
@@ -269,7 +267,14 @@ html.theme-royal {
     background: #6ea0ff;
 }
 
-/* TERMINAL */
+/* FIXED: Corrected selector (ID, not class) */
+#theme-wheel.active .theme-node {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+/* FULLSCREEN TERMINAL */
 #terminal {
     position: fixed;
     inset: 0;
