@@ -24,24 +24,38 @@ const themes = [
   "theme-royal",
 ];
 
-// BLURRED NEON BLOBS BACKGROUND
+// BLURRED NEON BLOBS BACKGROUND WITH COLOR SHIFT
 const blobColors = [
-  "rgba(0, 255, 247, 0.3)", // neon
-  "rgba(82, 255, 106, 0.3)", // forest
-  "rgba(255, 58, 31, 0.3)", // volcano
-  "rgba(110, 160, 255, 0.3)", // royal
+  [0, 255, 247], // neon
+  [82, 255, 106], // forest
+  [255, 58, 31], // volcano
+  [110, 160, 255], // royal
+  [255, 174, 111], // sunset
+  [201, 201, 201], // lunar
 ];
+
+const blobs = [];
 
 for (let i = 0; i < 5; i++) {
   const blob = document.createElement("div");
   blob.classList.add("neon-blob");
-  blob.style.background =
-    blobColors[Math.floor(Math.random() * blobColors.length)];
+  const color = blobColors[Math.floor(Math.random() * blobColors.length)];
+  blob.dataset.color = color.join(",");
+  blob.style.background = `rgba(${color.join(",")},0.3)`;
   blob.style.left = Math.random() * window.innerWidth + "px";
   blob.style.top = Math.random() * window.innerHeight + "px";
   blob.style.animationDuration = 15 + Math.random() * 20 + "s";
   document.body.appendChild(blob);
+  blobs.push(blob);
 }
+
+// Animate color changes
+setInterval(() => {
+  blobs.forEach((blob) => {
+    const newColor = blobColors[Math.floor(Math.random() * blobColors.length)];
+    blob.style.background = `rgba(${newColor.join(",")},0.9)`;
+  });
+}, 5000); // change color every 5 seconds
 
 // Apply theme correctly
 function applyTheme(theme) {

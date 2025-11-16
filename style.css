@@ -82,6 +82,8 @@ html.theme-royal {
     pointer-events: none;
     z-index: -2;
     animation: float 20s infinite alternate;
+    transition: background 5s linear;
+    /* smooth color change */
 }
 
 @keyframes float {
@@ -93,6 +95,7 @@ html.theme-royal {
         transform: translate(50px, -50px);
     }
 }
+
 
 /* MAIN CARD */
 .cyber-card {
