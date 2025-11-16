@@ -15,13 +15,33 @@ let spaceTimer = null;
 
 // THEME SYSTEM
 const themes = [
+  "theme-neon",
+  "theme-sunset",
   "theme-forest",
+  "theme-cyber",
   "theme-volcano",
+  "theme-lunar",
   "theme-royal",
-  "theme-aurora",
-  "theme-ocean",
-  "theme-sakura",
 ];
+
+// BLURRED NEON BLOBS BACKGROUND
+const blobColors = [
+  "rgba(0, 255, 247, 0.3)", // neon
+  "rgba(82, 255, 106, 0.3)", // forest
+  "rgba(255, 58, 31, 0.3)", // volcano
+  "rgba(110, 160, 255, 0.3)", // royal
+];
+
+for (let i = 0; i < 5; i++) {
+  const blob = document.createElement("div");
+  blob.classList.add("neon-blob");
+  blob.style.background =
+    blobColors[Math.floor(Math.random() * blobColors.length)];
+  blob.style.left = Math.random() * window.innerWidth + "px";
+  blob.style.top = Math.random() * window.innerHeight + "px";
+  blob.style.animationDuration = 15 + Math.random() * 20 + "s";
+  document.body.appendChild(blob);
+}
 
 // Apply theme correctly
 function applyTheme(theme) {
@@ -56,13 +76,20 @@ themeBtn.addEventListener("click", () => {
     if (themeWheel.classList.contains("active")) {
       node.style.left = 110 + Math.cos(angle) * radius + "px";
       node.style.top = 110 + Math.sin(angle) * radius + "px";
+      node.style.opacity = 1;
+      node.style.pointerEvents = "auto";
+      node.style.transform = "scale(1)";
     } else {
       node.style.left = "110px";
       node.style.top = "110px";
+      node.style.opacity = 0;
+      node.style.pointerEvents = "none";
+      node.style.transform = "scale(0.5)";
     }
   });
 });
 
+// Apply theme on node click
 themeWheel.querySelectorAll(".theme-node").forEach((node) => {
   node.addEventListener("click", () => {
     applyTheme(node.dataset.theme);
@@ -161,8 +188,9 @@ terminalInput.addEventListener("keydown", (e) => {
         "Commands: theme <name>, search <query>, clear, exit\n\n";
     } else if (cmd.startsWith("theme ")) {
       const name = cmd.split(" ")[1];
-      if (themes.includes("theme-" + name)) {
-        applyTheme("theme-" + name);
+      const fullTheme = "theme-" + name;
+      if (themes.includes(fullTheme)) {
+        applyTheme(fullTheme);
         terminalOutput.innerHTML += "Theme changed.\n\n";
       } else {
         terminalOutput.innerHTML += "Theme not found.\n\n";
