@@ -191,6 +191,7 @@ html.theme-royal {
     border-radius: 50%;
     background: linear-gradient(45deg, var(--accent), var(--accent-dim));
     box-shadow: 0 0 25px var(--glow);
+    overflow: hidden;
     transition: .3s;
 }
 
@@ -198,30 +199,20 @@ html.theme-royal {
     transform: scale(1.1);
 }
 
+.avatar-frame .avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 50%;
+}
+
 .profile-name {
     margin-top: 20px;
     font-size: 30px;
     font-weight: 800;
     color: var(--accent);
-}
-
-/* Neon typing */
-.neon-type::after {
-    content: attr(data-text);
-    animation: neon-typing 3.2s steps(30) forwards;
-    white-space: nowrap;
-    overflow: hidden;
-    border-right: 3px solid cyan;
-}
-
-@keyframes neon-typing {
-    from {
-        width: 0;
-    }
-
-    to {
-        width: 100%;
-    }
+    /* Stable display, no animation, no cursor */
 }
 
 .profile-title {
@@ -315,7 +306,7 @@ html.theme-royal {
 }
 
 /* ------------------------------
-   FULLSCREEN TERMINAL (H2 Style)
+   FULLSCREEN TERMINAL
 --------------------------------*/
 
 #terminal {
