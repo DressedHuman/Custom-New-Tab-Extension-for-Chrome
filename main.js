@@ -36,6 +36,13 @@ const blobColors = [
 
 const blobs = [];
 
+// Track mouse position
+let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+window.addEventListener("mousemove", (e) => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+});
+
 for (let i = 0; i < 6; i++) {
   const blob = document.createElement("div");
   blob.classList.add("neon-blob");
@@ -78,15 +85,37 @@ for (let i = 0; i < 6; i++) {
 // Animate blobs
 function animateBlobs() {
   blobs.forEach((blob) => {
+    const dx = blob.x - mouse.x; // Note: blob minus mouse for repulsion
+    const dy = blob.y - mouse.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    // Repulsion zone
+    if (dist < 150) {
+      const force = (150 - dist) * 0.05; // stronger multiplier
+      blob.vx += (dx / dist) * force;
+      blob.vy += (dy / dist) * force;
+    }
+
+    // Optional weak attraction if farther away
+    else if (dist < 300) {
+      const force = (dist - 150) * 0.002;
+      blob.vx -= (dx / dist) * force;
+      blob.vy -= (dy / dist) * force;
+    }
+
     // Update position
     blob.x += blob.vx;
     blob.y += blob.vy;
+
+    // Damping to keep motion smooth
+    blob.vx *= 0.92;
+    blob.vy *= 0.92;
 
     // Bounce off edges
     if (blob.x < 0 || blob.x > window.innerWidth) blob.vx *= -1;
     if (blob.y < 0 || blob.y > window.innerHeight) blob.vy *= -1;
 
-    // Update rotation and scale
+    // Rotation and scale
     blob.angle += blob.vr;
     blob.scale += blob.vs;
     if (blob.scale > 1.2 || blob.scale < 0.8) blob.vs *= -1;
@@ -98,6 +127,7 @@ function animateBlobs() {
 
   requestAnimationFrame(animateBlobs);
 }
+
 animateBlobs();
 
 // Animate color changes every 5 seconds with new glow/blur
