@@ -11,14 +11,10 @@ body {
     width: 100%;
     overflow: hidden;
     font-family: "Inter", sans-serif;
-    transition: background 0.8s ease, color 0.5s ease;
     color: var(--accent);
 }
 
-/* ------------------------------
-   THEME VARIABLE SYSTEM
---------------------------------*/
-
+/* THEME VARIABLES */
 :root {
     --accent: #00fff7;
     --accent-dim: #00fff788;
@@ -61,10 +57,7 @@ html.theme-royal {
     background: linear-gradient(120deg, #0b1026, #1b2656, #0a0f24);
 }
 
-/* ------------------------------
-   LOADING SCREEN
---------------------------------*/
-
+/* LOADING SCREEN */
 #loading-screen {
     position: fixed;
     inset: 0;
@@ -100,38 +93,19 @@ html.theme-royal {
     }
 }
 
-/* ------------------------------
-   PARTICLES
---------------------------------*/
-
+/* PARTICLES */
 #particleCanvas {
     position: fixed;
     inset: 0;
     z-index: -1;
 }
 
-/* ------------------------------
-   BACKGROUND
---------------------------------*/
-
+/* BACKGROUND */
 .neon-bg {
     position: fixed;
     inset: 0;
     background: linear-gradient(135deg, var(--accent-bg), transparent 60%);
-    animation: bg-pulse 6s infinite alternate;
     z-index: -3;
-}
-
-@keyframes bg-pulse {
-    from {
-        filter: blur(20px);
-        opacity: .5;
-    }
-
-    to {
-        filter: blur(40px);
-        opacity: 1;
-    }
 }
 
 .light-streaks {
@@ -142,20 +116,10 @@ html.theme-royal {
             var(--accent-dim) 1px,
             transparent 1px,
             transparent 4px);
-    animation: streak 8s linear infinite;
     z-index: -2;
 }
 
-@keyframes streak {
-    to {
-        background-position: 200px 200px;
-    }
-}
-
-/* ------------------------------
-   MAIN CARD
---------------------------------*/
-
+/* MAIN CARD */
 .cyber-card {
     width: min(420px, 90%);
     padding: 50px 40px;
@@ -164,25 +128,9 @@ html.theme-royal {
     backdrop-filter: blur(25px);
     border-radius: 30px;
     text-align: center;
-    animation: fadeUp 0.8s ease forwards;
 }
 
-@keyframes fadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* ------------------------------
-   PROFILE
---------------------------------*/
-
+/* PROFILE */
 .avatar-frame {
     width: 140px;
     height: 140px;
@@ -192,18 +140,12 @@ html.theme-royal {
     background: linear-gradient(45deg, var(--accent), var(--accent-dim));
     box-shadow: 0 0 25px var(--glow);
     overflow: hidden;
-    transition: .3s;
 }
 
-.avatar-frame:hover {
-    transform: scale(1.1);
-}
-
-.avatar-frame .avatar-img {
+.avatar-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
     border-radius: 50%;
 }
 
@@ -212,7 +154,6 @@ html.theme-royal {
     font-size: 30px;
     font-weight: 800;
     color: var(--accent);
-    /* Stable display, no animation, no cursor */
 }
 
 .profile-title {
@@ -220,10 +161,7 @@ html.theme-royal {
     margin-top: 5px;
 }
 
-/* ------------------------------
-   SEARCH + SUGGESTIONS
---------------------------------*/
-
+/* SEARCH */
 .search-orb-wrapper {
     position: relative;
     margin-top: 40px;
@@ -240,7 +178,6 @@ html.theme-royal {
     transition: .25s;
 }
 
-/* icon */
 .search-icon {
     position: absolute;
     top: 50%;
@@ -262,10 +199,7 @@ html.theme-royal {
     display: block;
 }
 
-/* ------------------------------
-   THEME ORB + RADIAL MENU
---------------------------------*/
-
+/* THEME ORB + RADIAL MENU */
 .theme-orb {
     position: fixed;
     right: 25px;
@@ -291,24 +225,50 @@ html.theme-royal {
 .theme-node {
     width: 35px;
     height: 35px;
-    background: var(--accent);
     border-radius: 50%;
     position: absolute;
     opacity: 0;
     transform: scale(0.5);
-    transition: .4s;
-    pointer-events: auto;
+    transition: .4s, left .4s, top .4s;
+    pointer-events: none;
+}
+
+/* Node colors according to theme */
+.theme-node[data-theme="theme-neon"] {
+    background: #00fff7;
+}
+
+.theme-node[data-theme="theme-sunset"] {
+    background: #ffae6f;
+}
+
+.theme-node[data-theme="theme-forest"] {
+    background: #52ff6a;
+}
+
+.theme-node[data-theme="theme-cyber"] {
+    background: #00eaff;
+}
+
+.theme-node[data-theme="theme-volcano"] {
+    background: #ff3b1f;
+}
+
+.theme-node[data-theme="theme-lunar"] {
+    background: #c9c9c9;
+}
+
+.theme-node[data-theme="theme-royal"] {
+    background: #6ea0ff;
 }
 
 .theme-wheel.active .theme-node {
     opacity: 1;
     transform: scale(1);
+    pointer-events: auto;
 }
 
-/* ------------------------------
-   FULLSCREEN TERMINAL
---------------------------------*/
-
+/* FULLSCREEN TERMINAL */
 #terminal {
     position: fixed;
     inset: 0;
