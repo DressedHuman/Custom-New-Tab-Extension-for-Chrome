@@ -312,6 +312,40 @@ html.theme-royal {
     overflow: visible;
 }
 
+/* Show default.jpg inside the frame when no user avatar is set. The image should be
+   placed inside the inner circle (inset by padding), and hidden when the frame
+   has the `.has-avatar` class (i.e. when a user-provided image is present). */
+.avatar-frame::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    right: 4px;
+    bottom: 4px;
+    border-radius: 50%;
+    background-image: url('default.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+}
+
+.avatar-frame.has-avatar::before {
+    display: none;
+}
+
+/* Make sure the <img> sits above the pseudo-element */
+.avatar-img {
+    position: relative;
+    z-index: 1;
+    display: none; /* hide by default to avoid broken image icon when src is missing */
+}
+
+/* Show the <img> only when a user avatar is present */
+.avatar-frame.has-avatar .avatar-img {
+    display: block;
+}
+
 .avatar-add {
     position: absolute;
     right: -5px;
@@ -324,9 +358,9 @@ html.theme-royal {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--accent-bg);
-    color: var(--accent);
-    border: 2px solid var(--accent);
+    background: var(--accent);
+    color: #000;
+    border: 2px solid rgba(0,0,0,0.12);
     cursor: pointer;
     transition: .25s;
     box-shadow: 0 0 12px var(--glow);

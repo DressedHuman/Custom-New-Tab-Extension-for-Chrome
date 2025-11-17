@@ -6,6 +6,7 @@ const avatarAddBtn = document.getElementById("avatarAddBtn");
 const searchInput = document.querySelector(".search-orb-input");
 const suggestions = document.getElementById("suggestions");
 const themeWheel = document.getElementById("theme-wheel");
+const avatarFrame = document.querySelector('.avatar-frame');
 
 const terminal = document.getElementById("terminal");
 const terminalInput = document.getElementById("terminal-input");
@@ -338,6 +339,7 @@ avatarInput.addEventListener("change", function () {
       }
       avatarImg.style.opacity = 0;
       avatarImg.src = base64Image;
+      if (avatarFrame) avatarFrame.classList.add('has-avatar');
       avatarImg.onload = () => {
         avatarImg.style.transition = "opacity 0.5s";
         avatarImg.style.opacity = 1;
@@ -351,5 +353,8 @@ avatarInput.addEventListener("change", function () {
 
 // Load saved avatar
 chrome.storage.local.get("userAvatar", (data) => {
-  if (data.userAvatar) avatarImg.src = data.userAvatar;
+  if (data.userAvatar) {
+    avatarImg.src = data.userAvatar;
+    if (avatarFrame) avatarFrame.classList.add('has-avatar');
+  }
 });
