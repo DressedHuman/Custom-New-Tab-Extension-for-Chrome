@@ -139,6 +139,19 @@ html.theme-royal {
     margin-top: 5px;
 }
 
+/* Editable name/title styles */
+.profile-name[contenteditable="true"],
+.profile-title[contenteditable="true"] {
+    padding: 2px 6px;
+    border-radius: 6px;
+    outline: none;
+}
+.profile-name[contenteditable="true"]:focus,
+.profile-title[contenteditable="true"]:focus {
+    box-shadow: 0 0 0 3px rgba(0, 255, 247, 0.08);
+    background: rgba(255,255,255,0.02);
+}
+
 /* SEARCH */
 .search-orb-wrapper {
     position: relative;

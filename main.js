@@ -7,6 +7,10 @@ const searchInput = document.querySelector(".search-orb-input");
 const suggestions = document.getElementById("suggestions");
 const themeWheel = document.getElementById("theme-wheel");
 const avatarFrame = document.querySelector('.avatar-frame');
+const DEFAULT_NAME = 'New Tab User';
+const DEFAULT_TITLE = 'Web Developer';
+const profileName = document.getElementById('profileName');
+const profileTitle = document.getElementById('profileTitle');
 
 const terminal = document.getElementById("terminal");
 const terminalInput = document.getElementById("terminal-input");
@@ -148,6 +152,53 @@ function loadTheme() {
   else applyTheme("theme-forest");
 }
 loadTheme();
+
+// Load saved profile name and title
+function loadProfile() {
+  chrome.storage.local.get(["userName", "userTitle"], (data) => {
+    if (profileName) profileName.textContent = data.userName || DEFAULT_NAME;
+    if (profileTitle) profileTitle.textContent = data.userTitle || DEFAULT_TITLE;
+  });
+}
+loadProfile();
+
+// Save helpers
+function saveProfileName() {
+  if (!profileName) return;
+  const val = profileName.textContent.trim() || DEFAULT_NAME;
+  profileName.textContent = val;
+  chrome.storage.local.set({ userName: val });
+  showToast("Name saved", 1200);
+}
+
+function saveProfileTitle() {
+  if (!profileTitle) return;
+  const val = profileTitle.textContent.trim() || DEFAULT_TITLE;
+  profileTitle.textContent = val;
+  chrome.storage.local.set({ userTitle: val });
+  showToast("Title saved", 1200);
+}
+
+// Inline editing: save on blur or Enter
+if (profileName) {
+  profileName.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      profileName.blur();
+    }
+  });
+  profileName.addEventListener('blur', saveProfileName);
+}
+
+if (profileTitle) {
+  profileTitle.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      profileTitle.blur();
+    }
+  });
+  profileTitle.addEventListener('blur', saveProfileTitle);
+}
 
 // RADIAL THEME MENU
 const themeNodes = themeWheel.querySelectorAll(".theme-node");
