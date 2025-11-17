@@ -325,3 +325,38 @@ window.addEventListener("keyup", (e) => {
     clearTimeout(spaceTimer);
   }
 });
+
+// Avatar Upload
+const avatarImg = document.getElementById("avatarImg");
+const avatarInput = document.getElementById("avatarInput");
+
+// Click avatar → open file picker
+avatarImg.addEventListener("click", () => {
+  avatarInput.click();
+});
+
+// When user selects an image
+avatarInput.addEventListener("change", function () {
+  const file = this.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    const base64Image = reader.result;
+
+    // Display avatar
+    avatarImg.src = base64Image;
+
+    // Save to chrome.storage
+    chrome.storage.local.set({ userAvatar: base64Image });
+  };
+
+  reader.readAsDataURL(file);
+});
+
+// Load saved avatar on startup
+chrome.storage.local.get("userAvatar", (data) => {
+  if (data.userAvatar) {
+    avatarImg.src = data.userAvatar;
+  }
+});
