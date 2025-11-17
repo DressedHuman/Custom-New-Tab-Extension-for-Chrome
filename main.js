@@ -265,6 +265,7 @@ searchInput.addEventListener("input", () => {
   }));
 });
 
+
 const canvas = document.getElementById("particleCanvas");
 const ctx = canvas.getContext("2d");
 canvas.width = innerWidth;
@@ -272,26 +273,53 @@ canvas.height = innerHeight;
 
 let particles = [];
 
-function spawnParticle(x, y) {
+// --- Invisible random walker for particle trail ---
+const walker = {
+  x: Math.random() * canvas.width,
+  y: Math.random() * canvas.height,
+  angle: Math.random() * Math.PI * 2,
+  speed: 2.2,
+  turnRate: 0.12 + Math.random() * 0.08,
+};
+
+function moveWalker() {
+  // Randomly change direction a bit
+  walker.angle += (Math.random() - 0.5) * walker.turnRate;
+  walker.x += Math.cos(walker.angle) * walker.speed;
+  walker.y += Math.sin(walker.angle) * walker.speed;
+  // Bounce off edges
+  if (walker.x < 0) { walker.x = 0; walker.angle = Math.PI - walker.angle; }
+  if (walker.x > canvas.width) { walker.x = canvas.width; walker.angle = Math.PI - walker.angle; }
+  if (walker.y < 0) { walker.y = 0; walker.angle = -walker.angle; }
+  if (walker.y > canvas.height) { walker.y = canvas.height; walker.angle = -walker.angle; }
+}
+
+function spawnParticle(x, y, color = '0,255,255') {
   particles.push({
     x,
     y,
-    vx: (Math.random() - 0.5) * 2,
-    vy: (Math.random() - 0.5) * 2,
+    vx: 0,
+    vy: 0,
     life: 60,
+    color,
   });
 }
 
+// Mouse trail as before
 window.addEventListener("mousemove", (e) => spawnParticle(e.clientX, e.clientY));
 
 function particleLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // Move walker and spawn a particle at its position
+  moveWalker();
+  spawnParticle(walker.x, walker.y, '255,255,0'); // yellow trail for walker
+  // Draw and update all particles
   for (let i = 0; i < particles.length; i++) {
     const p = particles[i];
     p.x += p.vx;
     p.y += p.vy;
     p.life--;
-    ctx.fillStyle = `rgba(0,255,255,${Math.max(0, p.life / 60)})`;
+    ctx.fillStyle = `rgba(${p.color},${Math.max(0, p.life / 60)})`;
     ctx.fillRect(p.x, p.y, 2, 2);
   }
   particles = particles.filter((p) => p.life > 0);
