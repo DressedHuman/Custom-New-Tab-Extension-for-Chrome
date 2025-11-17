@@ -4,6 +4,22 @@ const avatarImg = document.getElementById("avatarImg");
 const avatarInput = document.getElementById("avatarInput");
 const avatarAddBtn = document.getElementById("avatarAddBtn");
 const searchInput = document.querySelector(".search-orb-input");
+
+// Focus search bar on '/' key press
+window.addEventListener('keydown', (e) => {
+  // Ignore if typing in an input, textarea, or contenteditable
+  const active = document.activeElement;
+  if (
+    e.key === '/' &&
+    !e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey &&
+    active !== searchInput &&
+    !(active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable))
+  ) {
+    e.preventDefault();
+    searchInput.focus();
+    searchInput.select && searchInput.select();
+  }
+});
 const suggestions = document.getElementById("suggestions");
 const themeWheel = document.getElementById("theme-wheel");
 const avatarFrame = document.querySelector('.avatar-frame');
