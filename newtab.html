@@ -15,48 +15,37 @@
 
 <body>
 
-  <!-- Animated Neon Background -->
   <div class="neon-bg"></div>
   <div class="light-streaks"></div>
 
-  <!-- PARTICLE LAYER -->
   <canvas id="particleCanvas"></canvas>
 
   <main class="cyber-card">
-
-    <!-- Avatar & Info -->
     <section class="profile-section">
-      <div class="avatar-frame">
+      <div class="avatar-frame avatar-wrapper">
         <img src="profile_photo.png" alt="Profile" class="avatar-img" id="avatarImg">
+        <div class="avatar-add" id="avatarAddBtn">+</div>
       </div>
 
       <input type="file" id="avatarInput" accept="image/*" style="display:none;">
-
 
       <h1 class="profile-name">Motiur Rahman Mizan</h1>
       <h2 class="profile-title">Programmer</h2>
     </section>
 
-    <!-- Search -->
     <div class="search-container">
       <form class="search-orb-wrapper" action="https://www.startpage.com/sp/search" method="GET">
         <span class="material-symbols-rounded search-icon">search</span>
-        <input type="text" name="query" placeholder="Search the cyber web…" class="search-orb-input"
-          autocomplete="off" />
+        <input type="text" name="query" placeholder="Search the cyber web…" class="search-orb-input" autocomplete="off" />
       </form>
-
-      <!-- Suggestions -->
       <div class="suggestions" id="suggestions"></div>
     </div>
-
   </main>
 
-  <!-- THEME ORB (opens radial menu) -->
   <button id="themeSwitcher" class="theme-orb" aria-label="Switch Theme">
     <span class="material-symbols-rounded">brightness_6</span>
   </button>
 
-  <!-- RADIAL THEME MENU -->
   <div id="theme-wheel">
     <div class="theme-node" data-theme="theme-neon"></div>
     <div class="theme-node" data-theme="theme-sunset"></div>
@@ -67,7 +56,6 @@
     <div class="theme-node" data-theme="theme-royal"></div>
   </div>
 
-  <!-- FULLSCREEN TERMINAL -->
   <div id="terminal" class="terminal hidden">
     <div class="terminal-content">
       <div id="terminal-output"></div>
@@ -77,6 +65,8 @@
       </div>
     </div>
   </div>
+
+  <div id="toast" class="toast hidden"></div>
 
   <script src="main.js"></script>
 </body>
