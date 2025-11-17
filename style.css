@@ -361,6 +361,7 @@ html.theme-royal {
     background: var(--accent);
     color: #000;
     border: 2px solid rgba(0,0,0,0.12);
+    z-index: 3; /* ensure button sits above avatar image */
     cursor: pointer;
     transition: .25s;
     box-shadow: 0 0 12px var(--glow);
