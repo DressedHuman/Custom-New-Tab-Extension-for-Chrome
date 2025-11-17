@@ -294,25 +294,27 @@ function moveWalker() {
   if (walker.y > canvas.height) { walker.y = canvas.height; walker.angle = -walker.angle; }
 }
 
-function spawnParticle(x, y, color = '0,255,255') {
+
+function spawnParticle(x, y, color = '0,255,255', randomVel = false) {
   particles.push({
     x,
     y,
-    vx: 0,
-    vy: 0,
+    vx: randomVel ? (Math.random() - 0.5) * 2 : 0,
+    vy: randomVel ? (Math.random() - 0.5) * 2 : 0,
     life: 60,
     color,
   });
 }
 
-// Mouse trail as before
-window.addEventListener("mousemove", (e) => spawnParticle(e.clientX, e.clientY));
+
+// Mouse trail as before (cyan, random velocity)
+window.addEventListener("mousemove", (e) => spawnParticle(e.clientX, e.clientY, '0,255,255', true));
 
 function particleLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  // Move walker and spawn a particle at its position
+  // Move walker and spawn a particle at its position (same as mouse: cyan, random velocity)
   moveWalker();
-  spawnParticle(walker.x, walker.y, '255,255,0'); // yellow trail for walker
+  spawnParticle(walker.x, walker.y, '0,255,255', true);
   // Draw and update all particles
   for (let i = 0; i < particles.length; i++) {
     const p = particles[i];
