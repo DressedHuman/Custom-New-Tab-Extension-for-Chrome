@@ -82,6 +82,8 @@ def generate_key():
 
 @app.route("/verify", methods=["POST"])
 def verify_key():
+    from datetime import datetime
+    
     data = request.get_json()
     key = data.get("key")
     
@@ -93,12 +95,62 @@ def verify_key():
     if result:
         active, used = result
         if active and not used:
+            # Check subscription expiry
+            c.execute("""SELECT subscription_end_date, subscription_status 
+                        FROM purchases WHERE activation_key = ?""", (key,))
+            subscription = c.fetchone()
+            
+            if subscription:
+                end_date_str, status = subscription
+                if end_date_str:
+                    end_date = datetime.fromisoformat(end_date_str.replace(' ', 'T'))
+                    if datetime.now() > end_date:
+                        # Subscription expired
+                        c.execute("UPDATE purchases SET subscription_status = 'expired' WHERE activation_key = ?", (key,))
+                        conn.commit()
+                        conn.close()
+                        return jsonify({"valid": False, "message": "Subscription has expired"})
+            
             # Mark key as used
             c.execute("UPDATE keys SET used = 1, used_at = CURRENT_TIMESTAMP WHERE key = ?", (key,))
             conn.commit()
+            
+            # Return success with expiry date
+            if subscription and subscription[0]:
+                conn.close()
+                return jsonify({
+                    "valid": True, 
+                    "message": "Activation successful",
+                    "expiry_date": subscription[0]
+                })
+            
             conn.close()
             return jsonify({"valid": True, "message": "Activation successful"})
         elif used:
+            # Check if subscription is still valid
+            c.execute("""SELECT subscription_end_date, subscription_status 
+                        FROM purchases WHERE activation_key = ?""", (key,))
+            subscription = c.fetchone()
+            
+            if subscription and subscription[0]:
+                end_date_str = subscription[0]
+                end_date = datetime.fromisoformat(end_date_str.replace(' ', 'T'))
+                
+                if datetime.now() > end_date:
+                    # Update status to expired
+                    c.execute("UPDATE purchases SET subscription_status = 'expired' WHERE activation_key = ?", (key,))
+                    conn.commit()
+                    conn.close()
+                    return jsonify({"valid": False, "message": "Subscription has expired"})
+                else:
+                    # Subscription still valid
+                    conn.close()
+                    return jsonify({
+                        "valid": True, 
+                        "message": "Subscription active",
+                        "expiry_date": end_date_str
+                    })
+            
             conn.close()
             return jsonify({"valid": False, "message": "This key has already been used"})
         else:

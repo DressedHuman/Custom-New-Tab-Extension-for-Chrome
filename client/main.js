@@ -588,6 +588,32 @@ const activationError = document.getElementById("activationError");
 
 function checkActivation() {
   const isActivated = localStorage.getItem("isActivated");
+  const expiryDate = localStorage.getItem("subscriptionExpiry");
+
+  // Check if subscription has expired
+  if (isActivated && expiryDate) {
+    const expiry = new Date(expiryDate);
+    const now = new Date();
+
+    if (now > expiry) {
+      // Subscription expired, lock the extension
+      localStorage.removeItem("isActivated");
+      localStorage.removeItem("subscriptionExpiry");
+      activationModal.classList.remove("hidden");
+
+      // Show expiry message but keep error hidden initially
+      // It will show when user tries to activate
+
+      // Blur everything except the modal
+      Array.from(document.body.children).forEach(child => {
+        if (child.id !== "activationModal" && child.id !== "toast") {
+          child.classList.add("locked-blur");
+        }
+      });
+      return;
+    }
+  }
+
   if (!isActivated) {
     activationModal.classList.remove("hidden");
     // Blur everything except the modal
@@ -620,6 +646,12 @@ activateBtn.addEventListener("click", async () => {
 
     if (data.valid) {
       localStorage.setItem("isActivated", "true");
+
+      // Store expiry date if provided
+      if (data.expiry_date) {
+        localStorage.setItem("subscriptionExpiry", data.expiry_date);
+      }
+
       activationModal.classList.add("hidden");
 
       // Unblur everything
@@ -644,3 +676,6 @@ activateBtn.addEventListener("click", async () => {
 
 // Check on load
 checkActivation();
+
+// Check expiry periodically (every hour)
+setInterval(checkActivation, 3600000);
