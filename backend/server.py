@@ -26,12 +26,22 @@ def init_db():
     conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
     
-    # Create table with used column
+    # Create keys table with used column
     c.execute('''CREATE TABLE IF NOT EXISTS keys
                  (key TEXT PRIMARY KEY, 
                   active BOOLEAN,
                   used BOOLEAN DEFAULT 0,
                   used_at TIMESTAMP)''')
+    
+    # Create purchases table
+    c.execute('''CREATE TABLE IF NOT EXISTS purchases
+                 (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                  name TEXT NOT NULL,
+                  email TEXT NOT NULL,
+                  payment_method TEXT NOT NULL,
+                  activation_key TEXT,
+                  purchase_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                  FOREIGN KEY (activation_key) REFERENCES keys(key))''')
     
     # Migrate existing database if needed
     c.execute("PRAGMA table_info(keys)")
@@ -93,6 +103,35 @@ def get_stats():
     count = c.fetchone()[0]
     conn.close()
     return jsonify({"active_keys": count})
+
+# Purchase Routes
+@app.route("/purchase", methods=["GET"])
+def purchase_page():
+    return render_template('purchase.html', success=False)
+
+@app.route("/purchase", methods=["POST"])
+def process_purchase():
+    name = request.form.get('name')
+    email = request.form.get('email')
+    payment_method = request.form.get('payment_method')
+    
+    # Generate activation key
+    new_key = str(uuid.uuid4())
+    
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    
+    # Insert key
+    c.execute("INSERT INTO keys (key, active) VALUES (?, ?)", (new_key, True))
+    
+    # Insert purchase record
+    c.execute("INSERT INTO purchases (name, email, payment_method, activation_key) VALUES (?, ?, ?, ?)",
+              (name, email, payment_method, new_key))
+    
+    conn.commit()
+    conn.close()
+    
+    return render_template('purchase.html', success=True, activation_key=new_key)
 
 # Admin Routes
 @app.route("/admin")

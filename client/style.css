@@ -635,3 +635,15 @@ input:checked+.slider:before {
     pointer-events: none;
     user-select: none;
 }
+
+.get-key-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.get-key-link:hover {
+    text-shadow: 0 0 10px var(--glow);
+    transform: scale(1.05);
+}
