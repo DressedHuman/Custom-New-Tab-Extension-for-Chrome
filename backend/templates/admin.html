@@ -231,6 +231,10 @@
                 <h3>Used Keys</h3>
                 <div class="number">{{ used_keys }}</div>
             </div>
+            <div class="stat-card">
+                <h3>Active Subscriptions</h3>
+                <div class="number">{{ active_subscriptions }}</div>
+            </div>
         </div>
 
         <div class="actions">
@@ -239,6 +243,7 @@
             </form>
         </div>
 
+        <h2 style="color: white; margin: 30px 0 20px;">Activation Keys</h2>
         <div class="keys-table">
             <table>
                 <thead>
@@ -278,6 +283,51 @@
                                     onclick="return confirm('Delete this key?')">Delete</button>
                             </form>
                         </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <h2 style="color: white; margin: 40px 0 20px;">Subscriptions</h2>
+        <div class="keys-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Plan</th>
+                        <th>Status</th>
+                        <th>End Date</th>
+                        <th>Key</th>
+                        <th>Purchase Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for purchase in purchases %}
+                    <tr>
+                        <td>{{ purchase[1] }}</td>
+                        <td>{{ purchase[2] }}</td>
+                        <td>
+                            <span class="status" style="background: #d1ecf1; color: #0c5460;">
+                                {{ purchase[3].capitalize() }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if purchase[4] == 'active' %}
+                            <span class="status active">Active</span>
+                            {% else %}
+                            <span class="status" style="background: #f8d7da; color: #721c24;">{{
+                                purchase[4].capitalize() }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ purchase[5][:10] if purchase[5] else '-' }}</td>
+                        <td>
+                            <span class="key-code" onclick="copyToClipboard('{{ purchase[6] }}')" title="Click to copy">
+                                {{ purchase[6][:8] }}...
+                            </span>
+                        </td>
+                        <td>{{ purchase[7][:10] if purchase[7] else '-' }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

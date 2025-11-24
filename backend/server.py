@@ -39,9 +39,22 @@ def init_db():
                   name TEXT NOT NULL,
                   email TEXT NOT NULL,
                   payment_method TEXT NOT NULL,
+                  subscription_plan TEXT NOT NULL,
+                  subscription_status TEXT DEFAULT 'active',
+                  subscription_end_date TIMESTAMP,
                   activation_key TEXT,
                   purchase_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                   FOREIGN KEY (activation_key) REFERENCES keys(key))''')
+    
+    # Migrate existing purchases table if needed
+    c.execute("PRAGMA table_info(purchases)")
+    purchase_columns = [col[1] for col in c.fetchall()]
+    if 'subscription_plan' not in purchase_columns:
+        c.execute("ALTER TABLE purchases ADD COLUMN subscription_plan TEXT DEFAULT 'monthly'")
+    if 'subscription_status' not in purchase_columns:
+        c.execute("ALTER TABLE purchases ADD COLUMN subscription_status TEXT DEFAULT 'active'")
+    if 'subscription_end_date' not in purchase_columns:
+        c.execute("ALTER TABLE purchases ADD COLUMN subscription_end_date TIMESTAMP")
     
     # Migrate existing database if needed
     c.execute("PRAGMA table_info(keys)")
@@ -111,9 +124,18 @@ def purchase_page():
 
 @app.route("/purchase", methods=["POST"])
 def process_purchase():
+    from datetime import datetime, timedelta
+    
     name = request.form.get('name')
     email = request.form.get('email')
     payment_method = request.form.get('payment_method')
+    subscription_plan = request.form.get('subscription_plan', 'monthly')
+    
+    # Calculate subscription end date
+    if subscription_plan == 'yearly':
+        end_date = datetime.now() + timedelta(days=365)
+    else:  # monthly
+        end_date = datetime.now() + timedelta(days=30)
     
     # Generate activation key
     new_key = str(uuid.uuid4())
@@ -124,14 +146,16 @@ def process_purchase():
     # Insert key
     c.execute("INSERT INTO keys (key, active) VALUES (?, ?)", (new_key, True))
     
-    # Insert purchase record
-    c.execute("INSERT INTO purchases (name, email, payment_method, activation_key) VALUES (?, ?, ?, ?)",
-              (name, email, payment_method, new_key))
+    # Insert purchase record with subscription info
+    c.execute("""INSERT INTO purchases 
+                 (name, email, payment_method, subscription_plan, subscription_status, subscription_end_date, activation_key) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?)""",
+              (name, email, payment_method, subscription_plan, 'active', end_date, new_key))
     
     conn.commit()
     conn.close()
     
-    return render_template('purchase.html', success=True, activation_key=new_key)
+    return render_template('purchase.html', success=True, activation_key=new_key, subscription_plan=subscription_plan)
 
 # Admin Routes
 @app.route("/admin")
@@ -147,6 +171,15 @@ def admin_panel():
     active_keys = c.fetchone()[0]
     c.execute("SELECT COUNT(*) FROM keys WHERE used = 1")
     used_keys = c.fetchone()[0]
+    
+    # Get purchases/subscriptions data
+    c.execute("""SELECT id, name, email, subscription_plan, subscription_status, 
+                        subscription_end_date, activation_key, purchase_date 
+                 FROM purchases ORDER BY purchase_date DESC""")
+    purchases = c.fetchall()
+    c.execute("SELECT COUNT(*) FROM purchases WHERE subscription_status = 'active'")
+    active_subscriptions = c.fetchone()[0]
+    
     conn.close()
     
     return render_template('admin.html', 
@@ -154,6 +187,8 @@ def admin_panel():
                          total_keys=total_keys,
                          active_keys=active_keys,
                          used_keys=used_keys,
+                         purchases=purchases,
+                         active_subscriptions=active_subscriptions,
                          message=request.args.get('message'))
 
 @app.route("/admin/generate", methods=["POST"])
