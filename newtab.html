@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Motiur Rahman Mizan - Cyber UI</title>
+  <title>New Tab - Motiur Rahman Mizan</title>
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
@@ -28,21 +28,68 @@
         <div class="avatar-add" id="avatarAddBtn">+</div>
       </div>
       <input type="file" id="avatarInput" accept="image/*" style="display:none;">
-      <h1 id="profileName" class="profile-name" contenteditable="true" spellcheck="false" aria-label="Edit your name">New Tab User</h1>
-      <h2 id="profileTitle" class="profile-title" contenteditable="true" spellcheck="false" aria-label="Edit your title">Web Developer</h2>
+      <h1 id="profileName" class="profile-name" contenteditable="true" spellcheck="false" aria-label="Edit your name">
+        New Tab User</h1>
+      <h2 id="profileTitle" class="profile-title" contenteditable="true" spellcheck="false"
+        aria-label="Edit your title">Web Developer</h2>
     </section>
     <div class="search-container">
       <form class="search-orb-wrapper" action="https://www.startpage.com/sp/search" method="GET">
         <span class="material-symbols-rounded search-icon">search</span>
-        <input type="text" name="query" placeholder="Search the cyber web…" class="search-orb-input" autocomplete="off" />
+        <input type="text" name="query" placeholder="Search the cyber web…" class="search-orb-input"
+          autocomplete="off" />
       </form>
       <div class="suggestions" id="suggestions"></div>
     </div>
   </main>
 
   <button id="themeSwitcher" class="theme-orb" aria-label="Switch Theme">
-    <span class="material-symbols-rounded">brightness_6</span>
+    <span class="material-symbols-rounded">palette</span>
   </button>
+
+  <button id="settingsBtn" class="settings-orb" aria-label="Open Settings">
+    <span class="material-symbols-rounded">settings</span>
+  </button>
+
+  <div id="settingsModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Settings</h2>
+        <button id="closeSettings" class="close-btn">&times;</button>
+      </div>
+
+      <div class="modal-section">
+        <h3>Appearance</h3>
+        <div class="theme-grid">
+          <div class="theme-option" data-theme="theme-neon" style="background: #00fff7;"></div>
+          <div class="theme-option" data-theme="theme-sunset" style="background: #ffae6f;"></div>
+          <div class="theme-option" data-theme="theme-forest" style="background: #52ff6a;"></div>
+          <div class="theme-option" data-theme="theme-cyber" style="background: #00eaff;"></div>
+          <div class="theme-option" data-theme="theme-volcano" style="background: #ff3b1f;"></div>
+          <div class="theme-option" data-theme="theme-lunar" style="background: #c9c9c9;"></div>
+          <div class="theme-option" data-theme="theme-royal" style="background: #6ea0ff;"></div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <h3>Performance</h3>
+        <div class="setting-row">
+          <span>Background Blobs</span>
+          <label class="switch">
+            <input type="checkbox" id="blobToggle" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="setting-row" style="margin-top: 15px;">
+          <span>Particle Effects</span>
+          <label class="switch">
+            <input type="checkbox" id="particleToggle" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div id="theme-wheel">
     <div class="theme-node" data-theme="theme-neon"></div>

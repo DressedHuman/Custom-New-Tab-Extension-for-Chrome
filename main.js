@@ -34,6 +34,8 @@ const terminalOutput = document.getElementById("terminal-output");
 
 let spaceHeld = false;
 let spaceTimer = null;
+let blobsEnabled = true;
+let particlesEnabled = true;
 
 const themes = [
   "theme-neon",
@@ -76,9 +78,8 @@ for (let i = 0; i < 6; i++) {
   blob.opacity = 0.2 + Math.random() * 0.2;
 
   blob.style.background = `rgba(${color.join(",")},${blob.opacity})`;
-  blob.style.filter = `blur(${blob.blur}px) drop-shadow(0 0 ${
-    blob.glow
-  }px rgba(${color.join(",")},0.5))`;
+  blob.style.filter = `blur(${blob.blur}px) drop-shadow(0 0 ${blob.glow
+    }px rgba(${color.join(",")},0.5))`;
 
   // Random initial position
   blob.x = Math.random() * window.innerWidth;
@@ -103,6 +104,10 @@ for (let i = 0; i < 6; i++) {
 
 // Animate blobs
 function animateBlobs() {
+  if (!blobsEnabled) {
+    requestAnimationFrame(animateBlobs);
+    return;
+  }
   for (let i = 0; i < blobs.length; i++) {
     const blob = blobs[i];
     const dx = blob.x - mouse.x;
@@ -265,6 +270,48 @@ searchInput.addEventListener("input", () => {
   }));
 });
 
+// Search form behavior: if input is a URL, navigate directly; otherwise search on StartPage
+const searchForm = document.querySelector('.search-orb-wrapper');
+// Validate whether a string is a syntactically valid URL (try strict parsing first,
+// then attempt with an https:// prefix for host-only inputs like example.com).
+function isValidURL(q) {
+  if (!q) return false;
+  // direct parse (requires protocol)
+  try { new URL(q); return true; } catch (e) { }
+  // reject obvious non-URLs with spaces
+  if (/\s/.test(q)) return false;
+  // basic domain-like check (contains a dot and at least 2 char TLD)
+  if (!/^[^\s]+\.[^\s]{2,}$/i.test(q)) return false;
+  // attempt to parse with https://
+  try {
+    const u = new URL('https://' + q);
+    // validate the TLD/last label conservatively: allow 2-letter ccTLDs or a small allowlist
+    const hostParts = u.hostname.split('.');
+    const last = hostParts[hostParts.length - 1].toLowerCase();
+    // allow two-letter country codes
+    if (/^[a-z]{2}$/.test(last)) return true;
+    // common TLD allowlist (keeps list small to avoid false positives like 'vercel')
+    const allowed = new Set(['com', 'net', 'org', 'io', 'app', 'dev', 'tech', 'ai', 'co', 'me', 'info', 'biz', 'edu', 'gov', 'xyz', 'online', 'site', 'cloud', 'store']);
+    if (allowed.has(last)) return true;
+    return false;
+  } catch (e) { return false; }
+}
+
+if (searchForm) {
+  searchForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const q = (searchInput && searchInput.value || '').trim();
+    if (!q) return;
+    if (isValidURL(q)) {
+      const final = /^https?:\/\//i.test(q) ? q : 'https://' + q;
+      window.location.href = final;
+      return;
+    }
+    // fallback: search on StartPage
+    window.location.href = 'https://www.startpage.com/sp/search?query=' + encodeURIComponent(q);
+  });
+}
+
 
 const canvas = document.getElementById("particleCanvas");
 const ctx = canvas.getContext("2d");
@@ -311,6 +358,10 @@ function spawnParticle(x, y, color = '0,255,255', randomVel = false) {
 window.addEventListener("mousemove", (e) => spawnParticle(e.clientX, e.clientY, '0,255,255', true));
 
 function particleLoop() {
+  if (!particlesEnabled) {
+    requestAnimationFrame(particleLoop);
+    return;
+  }
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   // Move walker and spawn a particle at its position (same as mouse: cyan, random velocity)
   moveWalker();
@@ -455,3 +506,105 @@ chrome.storage.local.get("userAvatar", (data) => {
     if (avatarFrame) avatarFrame.classList.add('has-avatar');
   }
 });
+
+// --- SETTINGS LOGIC ---
+const settingsBtn = document.getElementById("settingsBtn");
+const settingsModal = document.getElementById("settingsModal");
+const closeSettings = document.getElementById("closeSettings");
+const blobToggle = document.getElementById("blobToggle");
+const particleToggle = document.getElementById("particleToggle");
+const themeOptions = document.querySelectorAll(".theme-option");
+
+// Open/Close Settings
+settingsBtn.addEventListener("click", () => {
+  settingsModal.classList.remove("hidden");
+  // Update UI state to match current settings
+  updateSettingsUI();
+});
+
+closeSettings.addEventListener("click", () => {
+  settingsModal.classList.add("hidden");
+});
+
+settingsModal.addEventListener("click", (e) => {
+  if (e.target === settingsModal) {
+    settingsModal.classList.add("hidden");
+  }
+});
+
+function updateSettingsUI() {
+  // Update animation toggles
+  blobToggle.checked = blobsEnabled;
+  particleToggle.checked = particlesEnabled;
+
+  // Update active theme
+  const currentTheme = localStorage.getItem("selectedTheme") || "theme-forest";
+  themeOptions.forEach(opt => {
+    if (opt.dataset.theme === currentTheme) {
+      opt.classList.add("active");
+    } else {
+      opt.classList.remove("active");
+    }
+  });
+}
+
+// Theme Selection in Settings
+themeOptions.forEach(opt => {
+  opt.addEventListener("click", () => {
+    const theme = opt.dataset.theme;
+    applyTheme(theme);
+    updateSettingsUI();
+  });
+});
+
+// Animation Toggles
+blobToggle.addEventListener("change", (e) => {
+  blobsEnabled = e.target.checked;
+  localStorage.setItem("blobsEnabled", blobsEnabled);
+  toggleBlobs(blobsEnabled);
+});
+
+particleToggle.addEventListener("change", (e) => {
+  particlesEnabled = e.target.checked;
+  localStorage.setItem("particlesEnabled", particlesEnabled);
+  toggleParticles(particlesEnabled);
+});
+
+function toggleBlobs(enabled) {
+  if (enabled) {
+    document.body.classList.remove("no-blob-anim");
+  } else {
+    document.body.classList.add("no-blob-anim");
+  }
+}
+
+function toggleParticles(enabled) {
+  if (enabled) {
+    document.body.classList.remove("no-particle-anim");
+  } else {
+    document.body.classList.add("no-particle-anim");
+  }
+}
+
+// Load Settings
+function loadSettings() {
+  const savedBlobs = localStorage.getItem("blobsEnabled");
+  blobsEnabled = savedBlobs === null ? true : (savedBlobs === "true");
+  toggleBlobs(blobsEnabled);
+
+  const savedParticles = localStorage.getItem("particlesEnabled");
+  particlesEnabled = savedParticles === null ? true : (savedParticles === "true");
+  toggleParticles(particlesEnabled);
+}
+
+// Modify existing loops to respect the flag
+
+// --- OVERRIDE EXISTING LOOPS ---
+// We need to redefine animateBlobs and particleLoop or wrap them.
+// Since we are appending code, we can't easily replace the functions defined above without replacing the whole file 
+// or using a more complex replace strategy. 
+// However, since I am replacing the END of the file, I can't redefine consts or functions declared with const/let easily if they are in the same scope.
+// BUT, the previous functions `animateBlobs` and `particleLoop` are defined in the global scope.
+// I will modify the original function definitions in a separate edit to include the check.
+
+loadSettings();

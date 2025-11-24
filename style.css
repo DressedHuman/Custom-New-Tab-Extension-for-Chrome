@@ -146,10 +146,11 @@ html.theme-royal {
     border-radius: 6px;
     outline: none;
 }
+
 .profile-name[contenteditable="true"]:focus,
 .profile-title[contenteditable="true"]:focus {
     box-shadow: 0 0 0 3px rgba(0, 255, 247, 0.08);
-    background: rgba(255,255,255,0.02);
+    background: rgba(255, 255, 255, 0.02);
 }
 
 /* SEARCH */
@@ -351,7 +352,8 @@ html.theme-royal {
 .avatar-img {
     position: relative;
     z-index: 1;
-    display: none; /* hide by default to avoid broken image icon when src is missing */
+    display: none;
+    /* hide by default to avoid broken image icon when src is missing */
 }
 
 /* Show the <img> only when a user avatar is present */
@@ -373,8 +375,9 @@ html.theme-royal {
     justify-content: center;
     background: var(--accent);
     color: #000;
-    border: 2px solid rgba(0,0,0,0.12);
-    z-index: 3; /* ensure button sits above avatar image */
+    border: 2px solid rgba(0, 0, 0, 0.12);
+    z-index: 3;
+    /* ensure button sits above avatar image */
     cursor: pointer;
     transition: .25s;
     box-shadow: 0 0 12px var(--glow);
@@ -434,7 +437,7 @@ html.theme-royal {
 /* Footer */
 .site-footer {
     text-align: center;
-    color: rgba(255,255,255,0.65);
+    color: rgba(255, 255, 255, 0.65);
     font-size: 13px;
     margin: 0;
     pointer-events: auto;
@@ -443,18 +446,208 @@ html.theme-royal {
     bottom: 12px;
     transform: translateX(-50%);
     z-index: 9999;
-    background: rgba(0,0,0,0.18);
+    background: rgba(0, 0, 0, 0.18);
     padding: 6px 10px;
     border-radius: 10px;
     backdrop-filter: blur(6px);
 }
+
 .site-footer a {
     color: var(--accent);
     text-decoration: none;
     font-weight: 700;
     margin-left: 6px;
 }
+
 .site-footer a:hover {
     text-decoration: underline;
     opacity: 0.95;
+}
+
+/* SETTINGS BUTTON */
+.settings-orb {
+    position: fixed;
+    right: 25px;
+    top: 25px;
+    padding: 12px;
+    border: none;
+    border-radius: 50%;
+    background: var(--accent-bg);
+    cursor: pointer;
+    box-shadow: 0 0 20px var(--glow);
+    color: var(--accent);
+    z-index: 100;
+    transition: transform 0.3s;
+}
+
+.settings-orb:hover {
+    transform: rotate(90deg);
+    background: var(--accent-dim);
+}
+
+/* SETTINGS MODAL */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-content {
+    background: rgba(10, 10, 15, 0.95);
+    border: 1px solid var(--accent);
+    box-shadow: 0 0 30px var(--glow);
+    width: 90%;
+    max-width: 500px;
+    border-radius: 20px;
+    padding: 30px;
+    transform: scale(1);
+    transition: transform 0.3s;
+}
+
+.modal.hidden .modal-content {
+    transform: scale(0.9);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--accent-dim);
+    padding-bottom: 15px;
+}
+
+.modal-header h2 {
+    font-size: 24px;
+    color: var(--accent);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-size: 32px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.modal-section {
+    margin-bottom: 30px;
+}
+
+.modal-section h3 {
+    font-size: 16px;
+    color: var(--accent);
+    opacity: 0.8;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* THEME GRID */
+.theme-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+    gap: 15px;
+}
+
+.theme-option {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.theme-option:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px var(--glow);
+}
+
+.theme-option.active {
+    border-color: #fff;
+    box-shadow: 0 0 20px var(--glow);
+}
+
+/* ANIMATION TOGGLE SWITCH */
+.setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--accent);
+    font-size: 18px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #fff;
+    transition: .4s;
+}
+
+input:checked+.slider {
+    background-color: var(--accent);
+}
+
+input:checked+.slider:before {
+    transform: translateX(24px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* NO ANIMATIONS UTILITY */
+.no-blob-anim .neon-blob {
+    animation: none !important;
+    transition: none !important;
+}
+
+.no-particle-anim #particleCanvas {
+    display: none;
 }
