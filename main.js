@@ -144,18 +144,7 @@ function animateBlobs() {
 }
 animateBlobs();
 
-// Animate color changes every 5 seconds with new glow/blur
-setInterval(() => {
-  blobs.forEach((blob) => {
-    const newColor = blobColors[Math.floor(Math.random() * blobColors.length)];
-    blob.glow = 15 + Math.random() * 30;
-    blob.blur = 20 + Math.random() * 40;
-    blob.opacity = 0.2 + Math.random() * 0.2;
 
-    blob.style.background = `rgba(${newColor.join(",")},${blob.opacity})`;
-    blob.style.filter = `blur(${blob.blur}px) drop-shadow(0 0 ${blob.glow}px rgba(${newColor.join(",")},0.5))`;
-  });
-}, 5000);
 
 // Apply theme correctly
 function applyTheme(theme) {
