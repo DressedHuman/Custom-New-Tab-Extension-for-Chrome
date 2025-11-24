@@ -81,19 +81,9 @@ html.theme-royal {
     opacity: 0.25;
     pointer-events: none;
     z-index: -2;
-    animation: float 20s infinite alternate;
     transition: background 5s linear;
+    will-change: transform;
     /* smooth color change */
-}
-
-@keyframes float {
-    0% {
-        transform: translate(0, 0);
-    }
-
-    100% {
-        transform: translate(50px, -50px);
-    }
 }
 
 
@@ -191,80 +181,7 @@ html.theme-royal {
     display: block;
 }
 
-/* THEME ORB + RADIAL MENU */
-.theme-orb {
-    position: fixed;
-    right: 25px;
-    bottom: 25px;
-    padding: 14px;
-    border: none;
-    border-radius: 50%;
-    background: var(--accent-bg);
-    cursor: pointer;
-    box-shadow: 0 0 20px var(--glow);
-}
 
-#theme-wheel {
-    position: fixed;
-    right: 90px;
-    bottom: 80px;
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    pointer-events: none;
-}
-
-/* FIXED: Starting collapsed position added */
-#theme-wheel .theme-node {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    position: absolute;
-    opacity: 0;
-    transform: scale(0.5);
-    transition: .4s, left .4s, top .4s;
-    pointer-events: none;
-
-    /* REQUIRED default coords */
-    left: 110px;
-    top: 110px;
-}
-
-/* Node colors */
-.theme-node[data-theme="theme-neon"] {
-    background: #00fff7;
-}
-
-.theme-node[data-theme="theme-sunset"] {
-    background: #ffae6f;
-}
-
-.theme-node[data-theme="theme-forest"] {
-    background: #52ff6a;
-}
-
-.theme-node[data-theme="theme-cyber"] {
-    background: #00eaff;
-}
-
-.theme-node[data-theme="theme-volcano"] {
-    background: #ff3b1f;
-}
-
-.theme-node[data-theme="theme-lunar"] {
-    background: #c9c9c9;
-}
-
-.theme-node[data-theme="theme-royal"] {
-    background: #6ea0ff;
-}
-
-/* FIXED: Corrected selector (ID, not class) */
-#theme-wheel.active .theme-node {
-    opacity: 1;
-    transform: scale(1);
-    pointer-events: auto;
-}
 
 /* FULLSCREEN TERMINAL */
 #terminal {
@@ -468,7 +385,7 @@ html.theme-royal {
 .settings-orb {
     position: fixed;
     right: 25px;
-    top: 25px;
+    bottom: 25px;
     padding: 12px;
     border: none;
     border-radius: 50%;
@@ -478,6 +395,7 @@ html.theme-royal {
     color: var(--accent);
     z-index: 100;
     transition: transform 0.3s;
+    will-change: transform;
 }
 
 .settings-orb:hover {

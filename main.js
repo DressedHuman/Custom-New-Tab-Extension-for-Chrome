@@ -1,5 +1,4 @@
 const root = document.documentElement;
-const themeBtn = document.getElementById("themeSwitcher");
 const avatarImg = document.getElementById("avatarImg");
 const avatarInput = document.getElementById("avatarInput");
 const avatarAddBtn = document.getElementById("avatarAddBtn");
@@ -21,7 +20,6 @@ window.addEventListener('keydown', (e) => {
   }
 });
 const suggestions = document.getElementById("suggestions");
-const themeWheel = document.getElementById("theme-wheel");
 const avatarFrame = document.querySelector('.avatar-frame');
 const DEFAULT_NAME = 'New Tab User';
 const DEFAULT_TITLE = 'Web Developer';
@@ -95,8 +93,9 @@ for (let i = 0; i < 6; i++) {
   blob.scale = 1 + Math.random() * 0.1; // initial scale
   blob.vs = (Math.random() - 0.5) * 0.002; // scale speed
 
-  blob.style.left = blob.x + "px";
-  blob.style.top = blob.y + "px";
+  blob.style.left = "0px";
+  blob.style.top = "0px";
+  blob.style.transform = `translate3d(${blob.x}px, ${blob.y}px, 0) translate(-50%, -50%) scale(${blob.scale})`;
 
   document.body.appendChild(blob);
   blobs.push(blob);
@@ -136,9 +135,9 @@ function animateBlobs() {
     blob.scale += blob.vs;
     if (blob.scale > 1.2 || blob.scale < 0.8) blob.vs *= -1;
 
-    blob.style.left = blob.x + "px";
-    blob.style.top = blob.y + "px";
-    blob.style.transform = `translate(-50%, -50%) rotate(${blob.angle}deg) scale(${blob.scale})`;
+    // blob.style.left = blob.x + "px"; // Removed for performance
+    // blob.style.top = blob.y + "px";   // Removed for performance
+    blob.style.transform = `translate3d(${blob.x}px, ${blob.y}px, 0) translate(-50%, -50%) rotate(${blob.angle}deg) scale(${blob.scale})`;
   }
   requestAnimationFrame(animateBlobs);
 }
@@ -210,31 +209,7 @@ if (profileTitle) {
   profileTitle.addEventListener('blur', saveProfileTitle);
 }
 
-// RADIAL THEME MENU
-const themeNodes = themeWheel.querySelectorAll(".theme-node");
-themeBtn.addEventListener("click", () => {
-  themeWheel.classList.toggle("active");
-  const radius = 75;
-  themeNodes.forEach((node, i) => {
-    const angle = (i / themeNodes.length) * (Math.PI * 2);
-    if (themeWheel.classList.contains("active")) {
-      node.style.left = 110 + Math.cos(angle) * radius + "px";
-      node.style.top = 110 + Math.sin(angle) * radius + "px";
-      node.style.opacity = 1;
-      node.style.pointerEvents = "auto";
-      node.style.transform = "scale(1)";
-    } else {
-      node.style.left = "110px";
-      node.style.top = "110px";
-      node.style.opacity = 0;
-      node.style.pointerEvents = "none";
-      node.style.transform = "scale(0.5)";
-    }
-  });
-});
 
-// Apply theme on node click
-themeNodes.forEach((node) => node.addEventListener("click", () => applyTheme(node.dataset.theme)));
 
 // SEARCH SUGGESTIONS
 const presetSuggestions = [
@@ -356,15 +331,22 @@ function particleLoop() {
   moveWalker();
   spawnParticle(walker.x, walker.y, '0,255,255', true);
   // Draw and update all particles
-  for (let i = 0; i < particles.length; i++) {
+  // Draw and update all particles
+  for (let i = particles.length - 1; i >= 0; i--) {
     const p = particles[i];
     p.x += p.vx;
     p.y += p.vy;
     p.life--;
+
+    if (p.life <= 0) {
+      particles.splice(i, 1);
+      continue;
+    }
+
     ctx.fillStyle = `rgba(${p.color},${Math.max(0, p.life / 60)})`;
     ctx.fillRect(p.x, p.y, 2, 2);
   }
-  particles = particles.filter((p) => p.life > 0);
+  // particles = particles.filter((p) => p.life > 0); // Removed for performance
   requestAnimationFrame(particleLoop);
 }
 particleLoop();
