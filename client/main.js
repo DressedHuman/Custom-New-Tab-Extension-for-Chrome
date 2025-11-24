@@ -579,3 +579,68 @@ function loadSettings() {
 // I will modify the original function definitions in a separate edit to include the check.
 
 loadSettings();
+
+// --- ACTIVATION SYSTEM ---
+const activationModal = document.getElementById("activationModal");
+const activationInput = document.getElementById("activationInput");
+const activateBtn = document.getElementById("activateBtn");
+const activationError = document.getElementById("activationError");
+
+function checkActivation() {
+  const isActivated = localStorage.getItem("isActivated");
+  if (!isActivated) {
+    activationModal.classList.remove("hidden");
+    // Blur everything except the modal
+    Array.from(document.body.children).forEach(child => {
+      if (child.id !== "activationModal" && child.id !== "toast") {
+        child.classList.add("locked-blur");
+      }
+    });
+  }
+}
+
+activateBtn.addEventListener("click", async () => {
+  const key = activationInput.value.trim();
+  if (!key) return;
+
+  activateBtn.disabled = true;
+  activateBtn.textContent = "Verifying...";
+  activationError.classList.add("hidden");
+
+  try {
+    const response = await fetch("https://customtab.pythonanywhere.com/verify", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ key }),
+    });
+
+    const data = await response.json();
+
+    if (data.valid) {
+      localStorage.setItem("isActivated", "true");
+      activationModal.classList.add("hidden");
+
+      // Unblur everything
+      Array.from(document.body.children).forEach(child => {
+        child.classList.remove("locked-blur");
+      });
+
+      showToast("Activation Successful!", 2000);
+    } else {
+      throw new Error(data.message || "Invalid key");
+    }
+  } catch (err) {
+    activationError.textContent = err.message || "Server error. Please try again.";
+    activationError.classList.remove("hidden");
+    activationInput.classList.add("shake");
+    setTimeout(() => activationInput.classList.remove("shake"), 500);
+  } finally {
+    activateBtn.disabled = false;
+    activateBtn.textContent = "Activate";
+  }
+});
+
+// Check on load
+checkActivation();

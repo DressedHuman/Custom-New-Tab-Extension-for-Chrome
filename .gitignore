@@ -1,2 +1,9 @@
 node_modules
 *.png
+
+# Backend
+__pycache__/
+*.pyc
+keys.db
+venv/
+.venv/
