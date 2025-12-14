@@ -646,102 +646,66 @@ input:checked+.slider:before {
 
 
 /* BOOKMARKS */
-/* BOOKMARKS */
 .bookmarks-section {
-    width: min(900px, 95%);
-    margin: 40px auto;
-    padding: 30px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 30px;
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    width: min(700px, 90%);
+    margin: 20px auto;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .bookmarks-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 15px;
     justify-content: center;
 }
 
-/* CYBER TILE DESIGN */
+/* COMPACT TILE DESIGN */
 .bookmark-item {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: rgba(10, 10, 15, 0.6);
-    border-radius: 16px;
-    padding: 20px 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 12px 8px;
     cursor: pointer;
     text-decoration: none;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    overflow: hidden;
-    z-index: 1;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-/* Animated Border Gradient */
-.bookmark-item::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 16px;
-    padding: 2px;
-    background: linear-gradient(45deg, transparent, var(--accent-dim), transparent);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity: 0.5;
-    transition: opacity 0.4s;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .bookmark-item:hover {
-    transform: translateY(-8px) scale(1.02);
-    background: rgba(20, 20, 30, 0.8);
-    box-shadow: 0 10px 30px -5px var(--accent-dim), 0 0 10px var(--accent-bg);
-}
-
-.bookmark-item:hover::before {
-    opacity: 1;
-    background: linear-gradient(45deg, var(--accent), var(--accent-dim), var(--accent));
-    animation: borderRotate 2s linear infinite;
-}
-
-@keyframes borderRotate {
-    0% {
-        filter: hue-rotate(0deg);
-    }
-
-    100% {
-        filter: hue-rotate(360deg);
-    }
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-4px);
+    border-color: var(--accent-dim);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .bookmark-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    margin-bottom: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    margin-bottom: 8px;
     object-fit: contain;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 6px;
-    transition: transform 0.4s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px;
+    transition: transform 0.3s ease;
 }
 
 .bookmark-item:hover .bookmark-icon {
-    transform: translateY(-5px) scale(1.1);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .bookmark-title {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 10px;
+    font-weight: 500;
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
@@ -756,55 +720,46 @@ input:checked+.slider:before {
 
 /* Add Button Special Styling */
 .add-bookmark {
-    background: rgba(255, 255, 255, 0.03);
-    border: 2px dashed var(--accent-dim);
-}
-
-.add-bookmark::before {
-    display: none;
-    /* No gradient border for add button */
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    background: transparent;
 }
 
 .add-bookmark .material-symbols-rounded {
-    font-size: 36px;
-    color: var(--accent-dim);
-    transition: all 0.4s;
+    font-size: 24px;
+    color: rgba(255, 255, 255, 0.4);
+    transition: all 0.3s;
 }
 
 .add-bookmark:hover {
-    background: var(--accent-bg);
     border-color: var(--accent);
-    box-shadow: 0 0 20px var(--accent-bg);
-    transform: translateY(-5px);
+    background: rgba(var(--accent-rgb), 0.05);
 }
 
 .add-bookmark:hover .material-symbols-rounded {
     color: var(--accent);
-    transform: rotate(90deg) scale(1.1);
-    text-shadow: 0 0 10px var(--accent);
+    transform: rotate(90deg);
 }
 
 .bookmark-delete {
     position: absolute;
-    top: 5px;
-    right: 5px;
-    background: rgba(255, 59, 31, 0.9);
+    top: -6px;
+    right: -6px;
+    background: #ff3b1f;
     color: #fff;
-    border-radius: 8px;
-    width: 24px;
-    height: 24px;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
+    font-size: 12px;
     opacity: 0;
-    transform: scale(0.8);
-    transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    border: none;
-    cursor: pointer;
-    z-index: 10;
+    transition: opacity 0.2s, transform 0.2s;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    z-index: 10;
 }
+
+
 
 .bookmark-item:hover .bookmark-delete {
     opacity: 1;
