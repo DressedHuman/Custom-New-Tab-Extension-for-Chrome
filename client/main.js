@@ -679,3 +679,132 @@ checkActivation();
 
 // Check expiry periodically (every hour)
 setInterval(checkActivation, 3600000);
+
+
+// --- BOOKMARKS SYSTEM ---
+const bookmarksGrid = document.getElementById("bookmarksGrid");
+const addBookmarkBtn = document.getElementById("addBookmarkBtn");
+const bookmarkModal = document.getElementById("bookmarkModal");
+const closeBookmarkModal = document.getElementById("closeBookmarkModal");
+const saveBookmarkBtn = document.getElementById("saveBookmarkBtn");
+const bookmarkUrlInput = document.getElementById("bookmarkUrl");
+const bookmarkTitleInput = document.getElementById("bookmarkTitle");
+
+let bookmarks = [];
+
+// Load bookmarks
+function loadBookmarks() {
+  chrome.storage.local.get("bookmarks", (data) => {
+    bookmarks = data.bookmarks || [];
+    renderBookmarks();
+  });
+}
+loadBookmarks();
+
+// Render bookmarks
+function renderBookmarks() {
+  // Clear existing bookmarks (except the add button)
+  const items = bookmarksGrid.querySelectorAll(".bookmark-item:not(.add-bookmark)");
+  items.forEach(item => item.remove());
+
+  bookmarks.forEach((bookmark, index) => {
+    const el = document.createElement("a");
+    el.href = bookmark.url;
+    el.className = "bookmark-item";
+    el.innerHTML = `
+      <button class="bookmark-delete" data-index="${index}">&times;</button>
+      <img src="${bookmark.icon}" class="bookmark-icon" alt="${bookmark.title}" onerror="this.src='default_icon.png'">
+      <span class="bookmark-title">${bookmark.title}</span>
+    `;
+
+    // Handle delete click
+    const deleteBtn = el.querySelector(".bookmark-delete");
+    deleteBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      deleteBookmark(index);
+    });
+
+    bookmarksGrid.insertBefore(el, addBookmarkBtn);
+  });
+}
+
+// Save bookmark
+function saveBookmark() {
+  const url = bookmarkUrlInput.value.trim();
+  const title = bookmarkTitleInput.value.trim();
+
+  if (!url) {
+    showToast("Please enter a URL");
+    return;
+  }
+
+  // Basic URL validation/formatting
+  let finalUrl = url;
+  if (!/^https?:\/\//i.test(url)) {
+    finalUrl = "https://" + url;
+  }
+
+  // Fetch favicon
+  // Using Google's favicon service for simplicity and reliability
+  // Format: https://www.google.com/s2/favicons?domain=URL&sz=SIZE
+  let domain = finalUrl;
+  try {
+    domain = new URL(finalUrl).hostname;
+  } catch (e) {
+    // If URL parsing fails, just use the input
+  }
+  const icon = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+
+  const newBookmark = {
+    url: finalUrl,
+    title: title || domain,
+    icon: icon
+  };
+
+  bookmarks.push(newBookmark);
+  chrome.storage.local.set({ bookmarks });
+  renderBookmarks();
+
+  closeBookmarkModalFn();
+  showToast("Bookmark saved!");
+}
+
+// Delete bookmark
+function deleteBookmark(index) {
+  if (confirm("Delete this bookmark?")) {
+    bookmarks.splice(index, 1);
+    chrome.storage.local.set({ bookmarks });
+    renderBookmarks();
+    showToast("Bookmark deleted");
+  }
+}
+
+// Modal Logic
+function openBookmarkModal() {
+  bookmarkModal.classList.remove("hidden");
+  bookmarkUrlInput.value = "";
+  bookmarkTitleInput.value = "";
+  bookmarkUrlInput.focus();
+}
+
+function closeBookmarkModalFn() {
+  bookmarkModal.classList.add("hidden");
+}
+
+addBookmarkBtn.addEventListener("click", openBookmarkModal);
+closeBookmarkModal.addEventListener("click", closeBookmarkModalFn);
+saveBookmarkBtn.addEventListener("click", saveBookmark);
+
+// Close modal on outside click
+bookmarkModal.addEventListener("click", (e) => {
+  if (e.target === bookmarkModal) closeBookmarkModalFn();
+});
+
+// Enter key to save
+bookmarkUrlInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") bookmarkTitleInput.focus();
+});
+bookmarkTitleInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") saveBookmark();
+});

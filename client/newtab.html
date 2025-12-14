@@ -43,6 +43,35 @@
     </div>
   </main>
 
+  <div class="bookmarks-section">
+    <div class="bookmarks-grid" id="bookmarksGrid">
+      <!-- Bookmarks will be inserted here -->
+      <div class="bookmark-item add-bookmark" id="addBookmarkBtn">
+        <span class="material-symbols-rounded">add</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="bookmarkModal" class="modal hidden">
+    <div class="modal-content bookmark-modal-content">
+      <div class="modal-header">
+        <h2>Add Bookmark</h2>
+        <button id="closeBookmarkModal" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group">
+          <label for="bookmarkUrl">URL</label>
+          <input type="text" id="bookmarkUrl" placeholder="https://example.com" autocomplete="off">
+        </div>
+        <div class="input-group">
+          <label for="bookmarkTitle">Title</label>
+          <input type="text" id="bookmarkTitle" placeholder="My Bookmark" autocomplete="off">
+        </div>
+        <button id="saveBookmarkBtn" class="action-btn">Save Bookmark</button>
+      </div>
+    </div>
+  </div>
+
 
 
   <button id="settingsBtn" class="settings-orb" aria-label="Open Settings">
@@ -107,7 +136,7 @@
       <p>Please enter your activation key to unlock the full experience.</p>
       <input type="text" id="activationInput" placeholder="Enter Key (e.g. PRO-2024-KEY)" autocomplete="off" />
       <button id="activateBtn" class="activate-btn">Activate</button>
-      <p id="activationError" class="error-msg hidden">Invalid activation key.</p>
+      <p id="activationError" class="error-msg hidden"></p>
       <p style="margin-top: 20px; text-align: center;">
         <a href="https://customtab.pythonanywhere.com/purchase" target="_blank" class="get-key-link">
           Don't have a key? Get one here
