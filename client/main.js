@@ -212,26 +212,51 @@ if (profileTitle) {
 
 
 // SEARCH SUGGESTIONS
-const presetSuggestions = [
-  "cyber ui",
-  "react projects",
-  "linux terminal",
-  "neon effects css",
-  "javascript shortcuts",
-  "chrome extension",
-];
+// SEARCH SUGGESTIONS
+let debounceTimer;
+
+async function fetchSuggestions(query) {
+  if (!query) return [];
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ action: "fetchSuggestions", query }, (response) => {
+      if (chrome.runtime.lastError) {
+        console.error("Runtime error:", chrome.runtime.lastError);
+        resolve([]);
+        return;
+      }
+      if (response && response.success) {
+        resolve(response.data);
+      } else {
+        console.error("Background fetch failed:", response ? response.error : "Unknown error");
+        resolve([]);
+      }
+    });
+  });
+}
 
 searchInput.addEventListener("input", () => {
   const val = searchInput.value.trim();
-  if (!val) return suggestions.classList.remove("show");
-
-  const matches = presetSuggestions.filter((s) => s.toLowerCase().includes(val.toLowerCase()));
-  suggestions.innerHTML = matches.map((m) => `<div class='s-item'>${m}</div>`).join("");
-  suggestions.classList.add("show");
-  document.querySelectorAll(".s-item").forEach((item) => item.addEventListener("click", () => {
-    searchInput.value = item.textContent;
+  if (!val) {
     suggestions.classList.remove("show");
-  }));
+    return;
+  }
+
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(async () => {
+    const matches = await fetchSuggestions(val);
+    if (matches.length > 0) {
+      suggestions.innerHTML = matches.map((m) => `<div class='s-item'>${m}</div>`).join("");
+      suggestions.classList.add("show");
+      document.querySelectorAll(".s-item").forEach((item) => item.addEventListener("click", () => {
+        searchInput.value = item.textContent;
+        suggestions.classList.remove("show");
+        // Optional: Auto-submit on click
+        // searchForm.submit(); 
+      }));
+    } else {
+      suggestions.classList.remove("show");
+    }
+  }, 300); // 300ms debounce
 });
 
 // Search form behavior: if input is a URL, navigate directly; otherwise search on StartPage

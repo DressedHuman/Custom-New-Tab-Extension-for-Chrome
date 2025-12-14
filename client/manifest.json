@@ -8,5 +8,11 @@
 	},
 	"permissions": [
 		"storage"
-	]
+	],
+	"host_permissions": [
+		"https://www.startpage.com/*"
+	],
+	"background": {
+		"service_worker": "background.js"
+	}
 }
