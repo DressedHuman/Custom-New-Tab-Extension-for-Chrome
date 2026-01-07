@@ -75,12 +75,12 @@ const blobColors = [
 const blobs = [];
 
 const DEFAULT_BLOB_POSITIONS = [
-  { x: 10, y: 15, opacity: 0.25, glow: 40 },
-  { x: 85, y: 10, opacity: 0.2, glow: 30 },
-  { x: 15, y: 85, opacity: 0.3, glow: 45 },
-  { x: 90, y: 80, opacity: 0.22, glow: 35 },
-  { x: 30, y: 50, opacity: 0.18, glow: 25 },
-  { x: 70, y: 45, opacity: 0.28, glow: 42 }
+  { x: 10, y: 15, opacity: 0.25, glow: 40, blur: 30 },
+  { x: 85, y: 10, opacity: 0.2, glow: 30, blur: 25 },
+  { x: 15, y: 85, opacity: 0.3, glow: 45, blur: 35 },
+  { x: 90, y: 80, opacity: 0.22, glow: 35, blur: 28 },
+  { x: 30, y: 50, opacity: 0.18, glow: 25, blur: 22 },
+  { x: 70, y: 45, opacity: 0.28, glow: 42, blur: 32 }
 ];
 
 let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
@@ -93,28 +93,29 @@ for (let i = 0; i < 6; i++) {
   const blob = document.createElement("div");
   blob.classList.add("neon-blob");
 
-  // Random initial color
-  const color = blobColors[Math.floor(Math.random() * blobColors.length)];
-  blob.dataset.color = color.join(",");
-
   // Initial position and brightness
   const savedRandom = localStorage.getItem("blobsRandomPositionEnabled");
   blobsRandomPositionEnabled = savedRandom === null ? true : (savedRandom === "true");
 
+  let color;
   if (blobsRandomPositionEnabled) {
+    color = blobColors[Math.floor(Math.random() * blobColors.length)];
     blob.x = Math.random() * window.innerWidth;
     blob.y = Math.random() * window.innerHeight;
     blob.glow = 15 + Math.random() * 30; // px
     blob.blur = 20 + Math.random() * 40; // px
     blob.opacity = 0.2 + Math.random() * 0.2;
   } else {
+    color = blobColors[i % blobColors.length];
     const pos = DEFAULT_BLOB_POSITIONS[i % DEFAULT_BLOB_POSITIONS.length];
     blob.x = (pos.x / 100) * window.innerWidth;
     blob.y = (pos.y / 100) * window.innerHeight;
     blob.opacity = pos.opacity;
     blob.glow = pos.glow;
-    blob.blur = 20 + Math.random() * 20; // Slight random blur for variety
+    blob.blur = pos.blur;
   }
+
+  blob.dataset.color = color.join(",");
 
   blob.style.background = `rgba(${color.join(",")},${blob.opacity})`;
   blob.style.filter = `blur(${blob.blur}px) drop-shadow(0 0 ${blob.glow
