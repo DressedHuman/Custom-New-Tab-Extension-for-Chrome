@@ -58,6 +58,16 @@ const blobs = [];
 blobsEnabled = true;
 let blobsMovementEnabled = true;
 let blobsInteractionEnabled = true;
+let blobsRandomPositionEnabled = true;
+
+const DEFAULT_BLOB_POSITIONS = [
+  { x: 10, y: 15 },
+  { x: 85, y: 10 },
+  { x: 15, y: 85 },
+  { x: 90, y: 80 },
+  { x: 30, y: 50 },
+  { x: 70, y: 45 }
+];
 
 let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 window.addEventListener("mousemove", (e) => {
@@ -82,9 +92,18 @@ for (let i = 0; i < 6; i++) {
   blob.style.filter = `blur(${blob.blur}px) drop-shadow(0 0 ${blob.glow
     }px rgba(${color.join(",")},0.5))`;
 
-  // Random initial position
-  blob.x = Math.random() * window.innerWidth;
-  blob.y = Math.random() * window.innerHeight;
+  // Initial position
+  const savedRandom = localStorage.getItem("blobsRandomPositionEnabled");
+  blobsRandomPositionEnabled = savedRandom === null ? true : (savedRandom === "true");
+
+  if (blobsRandomPositionEnabled) {
+    blob.x = Math.random() * window.innerWidth;
+    blob.y = Math.random() * window.innerHeight;
+  } else {
+    const pos = DEFAULT_BLOB_POSITIONS[i % DEFAULT_BLOB_POSITIONS.length];
+    blob.x = (pos.x / 100) * window.innerWidth;
+    blob.y = (pos.y / 100) * window.innerHeight;
+  }
 
   // Random drift speed and direction
   blob.vx = (Math.random() - 0.5) * 0.3;
@@ -524,6 +543,7 @@ const closeSettings = document.getElementById("closeSettings");
 const blobToggle = document.getElementById("blobToggle");
 const blobMovementToggle = document.getElementById("blobMovementToggle");
 const blobInteractionToggle = document.getElementById("blobInteractionToggle");
+const blobRandomPositionToggle = document.getElementById("blobRandomPositionToggle");
 const blobSubSettings = document.getElementById("blobSubSettings");
 
 const particleToggle = document.getElementById("particleToggle");
@@ -554,6 +574,7 @@ function updateSettingsUI() {
   blobToggle.checked = blobsEnabled;
   blobMovementToggle.checked = blobsMovementEnabled;
   blobInteractionToggle.checked = blobsInteractionEnabled;
+  blobRandomPositionToggle.checked = blobsRandomPositionEnabled;
 
   particleToggle.checked = particlesEnabled;
   mouseParticleToggle.checked = mouseParticlesEnabled;
@@ -610,6 +631,11 @@ blobInteractionToggle.addEventListener("change", (e) => {
   localStorage.setItem("blobsInteractionEnabled", blobsInteractionEnabled);
 });
 
+blobRandomPositionToggle.addEventListener("change", (e) => {
+  blobsRandomPositionEnabled = e.target.checked;
+  localStorage.setItem("blobsRandomPositionEnabled", blobsRandomPositionEnabled);
+});
+
 particleToggle.addEventListener("change", (e) => {
   particlesEnabled = e.target.checked;
   localStorage.setItem("particlesEnabled", particlesEnabled);
@@ -664,6 +690,9 @@ function loadSettings() {
 
   const savedMovement = localStorage.getItem("blobsMovementEnabled");
   blobsMovementEnabled = savedMovement === null ? true : (savedMovement === "true");
+
+  const savedRandomPos = localStorage.getItem("blobsRandomPositionEnabled");
+  blobsRandomPositionEnabled = savedRandomPos === null ? true : (savedRandomPos === "true");
 }
 
 // Modify existing loops to respect the flag
