@@ -55,6 +55,8 @@ const blobColors = [
 ];
 
 const blobs = [];
+blobsEnabled = true;
+let blobsMovementEnabled = true;
 let blobsInteractionEnabled = true;
 
 let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
@@ -126,20 +128,20 @@ function animateBlobs() {
       }
     }
 
-    blob.x += blob.vx;
-    blob.y += blob.vy;
-    blob.vx *= 0.92;
-    blob.vy *= 0.92;
+    if (blobsMovementEnabled) {
+      blob.x += blob.vx;
+      blob.y += blob.vy;
+      blob.vx *= 0.92;
+      blob.vy *= 0.92;
 
-    if (blob.x < 0 || blob.x > window.innerWidth) blob.vx *= -1;
-    if (blob.y < 0 || blob.y > window.innerHeight) blob.vy *= -1;
+      if (blob.x < 0 || blob.x > window.innerWidth) blob.vx *= -1;
+      if (blob.y < 0 || blob.y > window.innerHeight) blob.vy *= -1;
 
-    blob.angle += blob.vr;
-    blob.scale += blob.vs;
-    if (blob.scale > 1.2 || blob.scale < 0.8) blob.vs *= -1;
+      blob.angle += blob.vr;
+      blob.scale += blob.vs;
+      if (blob.scale > 1.2 || blob.scale < 0.8) blob.vs *= -1;
+    }
 
-    // blob.style.left = blob.x + "px"; // Removed for performance
-    // blob.style.top = blob.y + "px";   // Removed for performance
     blob.style.transform = `translate3d(${blob.x}px, ${blob.y}px, 0) translate(-50%, -50%) rotate(${blob.angle}deg) scale(${blob.scale})`;
   }
   requestAnimationFrame(animateBlobs);
@@ -310,6 +312,9 @@ const ctx = canvas.getContext("2d");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
+particlesEnabled = true;
+let mouseParticlesEnabled = true;
+let autoParticlesEnabled = true;
 let particles = [];
 
 // --- Invisible random walker for particle trail ---
@@ -347,7 +352,11 @@ function spawnParticle(x, y, color = '0,255,255', randomVel = false) {
 
 
 // Mouse trail as before (cyan, random velocity)
-window.addEventListener("mousemove", (e) => spawnParticle(e.clientX, e.clientY, '0,255,255', true));
+window.addEventListener("mousemove", (e) => {
+  if (particlesEnabled && mouseParticlesEnabled) {
+    spawnParticle(e.clientX, e.clientY, '0,255,255', true);
+  }
+});
 
 function particleLoop() {
   if (!particlesEnabled) {
@@ -356,8 +365,10 @@ function particleLoop() {
   }
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   // Move walker and spawn a particle at its position (same as mouse: cyan, random velocity)
-  moveWalker();
-  spawnParticle(walker.x, walker.y, '0,255,255', true);
+  if (autoParticlesEnabled) {
+    moveWalker();
+    spawnParticle(walker.x, walker.y, '0,255,255', true);
+  }
   // Draw and update all particles
   // Draw and update all particles
   for (let i = particles.length - 1; i >= 0; i--) {
@@ -511,8 +522,14 @@ const settingsBtn = document.getElementById("settingsBtn");
 const settingsModal = document.getElementById("settingsModal");
 const closeSettings = document.getElementById("closeSettings");
 const blobToggle = document.getElementById("blobToggle");
+const blobMovementToggle = document.getElementById("blobMovementToggle");
 const blobInteractionToggle = document.getElementById("blobInteractionToggle");
+const blobSubSettings = document.getElementById("blobSubSettings");
+
 const particleToggle = document.getElementById("particleToggle");
+const mouseParticleToggle = document.getElementById("mouseParticleToggle");
+const autoParticleToggle = document.getElementById("autoParticleToggle");
+const particleSubSettings = document.getElementById("particleSubSettings");
 const themeOptions = document.querySelectorAll(".theme-option");
 
 // Open/Close Settings
@@ -535,8 +552,25 @@ settingsModal.addEventListener("click", (e) => {
 function updateSettingsUI() {
   // Update animation toggles
   blobToggle.checked = blobsEnabled;
+  blobMovementToggle.checked = blobsMovementEnabled;
   blobInteractionToggle.checked = blobsInteractionEnabled;
+
   particleToggle.checked = particlesEnabled;
+  mouseParticleToggle.checked = mouseParticlesEnabled;
+  autoParticleToggle.checked = autoParticlesEnabled;
+
+  // Handle sub-settings visibility/state
+  if (blobsEnabled) {
+    blobSubSettings.classList.remove("disabled-setting");
+  } else {
+    blobSubSettings.classList.add("disabled-setting");
+  }
+
+  if (particlesEnabled) {
+    particleSubSettings.classList.remove("disabled-setting");
+  } else {
+    particleSubSettings.classList.add("disabled-setting");
+  }
 
   // Update active theme
   const currentTheme = localStorage.getItem("selectedTheme") || "theme-forest";
@@ -563,17 +597,34 @@ blobToggle.addEventListener("change", (e) => {
   blobsEnabled = e.target.checked;
   localStorage.setItem("blobsEnabled", blobsEnabled);
   toggleBlobs(blobsEnabled);
+  updateSettingsUI();
+});
+
+blobMovementToggle.addEventListener("change", (e) => {
+  blobsMovementEnabled = e.target.checked;
+  localStorage.setItem("blobsMovementEnabled", blobsMovementEnabled);
+});
+
+blobInteractionToggle.addEventListener("change", (e) => {
+  blobsInteractionEnabled = e.target.checked;
+  localStorage.setItem("blobsInteractionEnabled", blobsInteractionEnabled);
 });
 
 particleToggle.addEventListener("change", (e) => {
   particlesEnabled = e.target.checked;
   localStorage.setItem("particlesEnabled", particlesEnabled);
   toggleParticles(particlesEnabled);
+  updateSettingsUI();
 });
 
-blobInteractionToggle.addEventListener("change", (e) => {
-  blobsInteractionEnabled = e.target.checked;
-  localStorage.setItem("blobsInteractionEnabled", blobsInteractionEnabled);
+mouseParticleToggle.addEventListener("change", (e) => {
+  mouseParticlesEnabled = e.target.checked;
+  localStorage.setItem("mouseParticlesEnabled", mouseParticlesEnabled);
+});
+
+autoParticleToggle.addEventListener("change", (e) => {
+  autoParticlesEnabled = e.target.checked;
+  localStorage.setItem("autoParticlesEnabled", autoParticlesEnabled);
 });
 
 function toggleBlobs(enabled) {
@@ -602,8 +653,17 @@ function loadSettings() {
   particlesEnabled = savedParticles === null ? true : (savedParticles === "true");
   toggleParticles(particlesEnabled);
 
+  const savedMouseP = localStorage.getItem("mouseParticlesEnabled");
+  mouseParticlesEnabled = savedMouseP === null ? true : (savedMouseP === "true");
+
+  const savedAutoP = localStorage.getItem("autoParticlesEnabled");
+  autoParticlesEnabled = savedAutoP === null ? true : (savedAutoP === "true");
+
   const savedInteraction = localStorage.getItem("blobsInteractionEnabled");
   blobsInteractionEnabled = savedInteraction === null ? true : (savedInteraction === "true");
+
+  const savedMovement = localStorage.getItem("blobsMovementEnabled");
+  blobsMovementEnabled = savedMovement === null ? true : (savedMovement === "true");
 }
 
 // Modify existing loops to respect the flag

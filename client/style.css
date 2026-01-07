@@ -610,6 +610,26 @@ input:checked+.slider:before {
     border-radius: 50%;
 }
 
+/* SUB-SETTINGS */
+.sub-settings {
+    margin-left: 20px;
+    margin-top: 10px;
+    border-left: 1px solid var(--accent-dim);
+    padding-left: 15px;
+    transition: opacity 0.3s, pointer-events 0.3s;
+}
+
+.sub-row {
+    font-size: 14px !important;
+    margin-top: 8px !important;
+    opacity: 0.8;
+}
+
+.disabled-setting {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
 /* NO ANIMATIONS UTILITY */
 .no-blob-anim .neon-blob {
     animation: none !important;
