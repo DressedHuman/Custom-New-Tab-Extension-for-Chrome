@@ -26,6 +26,16 @@ const DEFAULT_TITLE = 'Web Developer';
 const profileName = document.getElementById('profileName');
 const profileTitle = document.getElementById('profileTitle');
 
+// Bookmarks
+const bookmarksSection = document.querySelector(".bookmarks-section");
+const bookmarksGrid = document.getElementById("bookmarksGrid");
+const addBookmarkBtn = document.getElementById("addBookmarkBtn");
+const bookmarkModal = document.getElementById("bookmarkModal");
+const closeBookmarkModal = document.getElementById("closeBookmarkModal");
+const saveBookmarkBtn = document.getElementById("saveBookmarkBtn");
+const bookmarkUrlInput = document.getElementById("bookmarkUrl");
+const bookmarkTitleInput = document.getElementById("bookmarkTitle");
+
 const terminal = document.getElementById("terminal");
 const terminalInput = document.getElementById("terminal-input");
 const terminalOutput = document.getElementById("terminal-output");
@@ -830,15 +840,6 @@ setInterval(checkActivation, 3600000);
 
 
 // --- BOOKMARKS SYSTEM ---
-const bookmarksSection = document.querySelector(".bookmarks-section");
-const bookmarksGrid = document.getElementById("bookmarksGrid");
-const addBookmarkBtn = document.getElementById("addBookmarkBtn");
-const bookmarkModal = document.getElementById("bookmarkModal");
-const closeBookmarkModal = document.getElementById("closeBookmarkModal");
-const saveBookmarkBtn = document.getElementById("saveBookmarkBtn");
-const bookmarkUrlInput = document.getElementById("bookmarkUrl");
-const bookmarkTitleInput = document.getElementById("bookmarkTitle");
-
 let bookmarks = [];
 let speeddialVisible = true;
 
