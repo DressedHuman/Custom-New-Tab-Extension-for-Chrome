@@ -551,6 +551,7 @@ const mouseParticleToggle = document.getElementById("mouseParticleToggle");
 const autoParticleToggle = document.getElementById("autoParticleToggle");
 const particleSubSettings = document.getElementById("particleSubSettings");
 const themeOptions = document.querySelectorAll(".theme-option");
+const speeddialToggle = document.getElementById("speeddialToggle");
 
 // Open/Close Settings
 settingsBtn.addEventListener("click", () => {
@@ -570,6 +571,9 @@ settingsModal.addEventListener("click", (e) => {
 });
 
 function updateSettingsUI() {
+  // Update appearance toggles
+  speeddialToggle.checked = speeddialVisible;
+
   // Update animation toggles
   blobToggle.checked = blobsEnabled;
   blobMovementToggle.checked = blobsMovementEnabled;
@@ -612,6 +616,19 @@ themeOptions.forEach(opt => {
     updateSettingsUI();
   });
 });
+
+// Speeddial Visibility
+speeddialToggle.addEventListener("change", (e) => {
+  speeddialVisible = e.target.checked;
+  localStorage.setItem("speeddialVisible", speeddialVisible);
+  toggleSpeeddial(speeddialVisible);
+});
+
+function toggleSpeeddial(visible) {
+  if (bookmarksSection) {
+    bookmarksSection.style.display = visible ? "block" : "none";
+  }
+}
 
 // Animation Toggles
 blobToggle.addEventListener("change", (e) => {
@@ -693,6 +710,10 @@ function loadSettings() {
 
   const savedRandomPos = localStorage.getItem("blobsRandomPositionEnabled");
   blobsRandomPositionEnabled = savedRandomPos === null ? true : (savedRandomPos === "true");
+
+  const savedSpeeddial = localStorage.getItem("speeddialVisible");
+  speeddialVisible = savedSpeeddial === null ? true : (savedSpeeddial === "true");
+  toggleSpeeddial(speeddialVisible);
 }
 
 // Modify existing loops to respect the flag
@@ -809,6 +830,7 @@ setInterval(checkActivation, 3600000);
 
 
 // --- BOOKMARKS SYSTEM ---
+const bookmarksSection = document.querySelector(".bookmarks-section");
 const bookmarksGrid = document.getElementById("bookmarksGrid");
 const addBookmarkBtn = document.getElementById("addBookmarkBtn");
 const bookmarkModal = document.getElementById("bookmarkModal");
@@ -818,6 +840,7 @@ const bookmarkUrlInput = document.getElementById("bookmarkUrl");
 const bookmarkTitleInput = document.getElementById("bookmarkTitle");
 
 let bookmarks = [];
+let speeddialVisible = true;
 
 // Load bookmarks
 function loadBookmarks() {
