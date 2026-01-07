@@ -612,22 +612,67 @@ input:checked+.slider:before {
 
 /* SUB-SETTINGS */
 .sub-settings {
-    margin-left: 20px;
-    margin-top: 10px;
-    border-left: 1px solid var(--accent-dim);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     padding-left: 15px;
-    transition: opacity 0.3s, pointer-events 0.3s;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+    margin-top: 10px;
 }
 
 .sub-row {
-    font-size: 14px !important;
-    margin-top: 8px !important;
+    font-size: 0.9em;
     opacity: 0.8;
 }
 
 .disabled-setting {
     opacity: 0.3;
     pointer-events: none;
+    filter: grayscale(1);
+}
+
+/* Accordion Styles */
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 5px 0;
+    transition: background 0.3s;
+}
+
+.accordion-header:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.accordion-icon {
+    font-size: 0.8em;
+    transition: transform 0.3s;
+    opacity: 0.5;
+}
+
+.accordion-header.active .accordion-icon {
+    transform: rotate(180deg);
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, opacity 0.3s;
+    opacity: 0;
+}
+
+.accordion-content.show {
+    max-height: 500px;
+    /* Large enough to fit content */
+    opacity: 1;
+    margin-bottom: 15px;
 }
 
 /* NO ANIMATIONS UTILITY */

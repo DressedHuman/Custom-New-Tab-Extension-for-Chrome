@@ -151,7 +151,7 @@ function animateBlobs() {
     const dy = blob.y - mouse.y;
     const dist = Math.sqrt(dx * dx + dy * dy) || 0.0001;
 
-    if (blobsInteractionEnabled) {
+    if (blobsEnabled && blobsInteractionEnabled) {
       if (dist < 150) {
         const force = (150 - dist) * 0.05;
         blob.vx += (dx / dist) * force;
@@ -163,7 +163,7 @@ function animateBlobs() {
       }
     }
 
-    if (blobsMovementEnabled) {
+    if (blobsEnabled && blobsMovementEnabled) {
       blob.x += blob.vx;
       blob.y += blob.vy;
       blob.vx *= 0.92;
@@ -398,7 +398,7 @@ function particleLoop() {
   }
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   // Move walker and spawn a particle at its position (same as mouse: cyan, random velocity)
-  if (autoParticlesEnabled) {
+  if (particlesEnabled && autoParticlesEnabled) {
     moveWalker();
     spawnParticle(walker.x, walker.y, '0,255,255', true);
   }
@@ -567,6 +567,23 @@ const particleSubSettings = document.getElementById("particleSubSettings");
 const themeOptions = document.querySelectorAll(".theme-option");
 const speeddialToggle = document.getElementById("speeddialToggle");
 
+// Accordion Logic
+const accordionHeaders = document.querySelectorAll(".accordion-header");
+
+accordionHeaders.forEach(header => {
+  header.addEventListener("click", (e) => {
+    // Don't toggle if clicking the switch
+    if (e.target.closest(".switch")) return;
+
+    const targetId = header.dataset.target;
+    const content = document.getElementById(targetId);
+    const icon = header.querySelector(".accordion-icon");
+
+    header.classList.toggle("active");
+    content.classList.toggle("show");
+  });
+});
+
 // Open/Close Settings
 settingsBtn.addEventListener("click", () => {
   settingsModal.classList.remove("hidden");
@@ -601,14 +618,21 @@ function updateSettingsUI() {
   // Handle sub-settings visibility/state
   if (blobsEnabled) {
     blobSubSettings.classList.remove("disabled-setting");
+    // Optionally auto-expand if enabled
+    // document.querySelector('[data-target="blobSubSettings"]').classList.add("active");
+    // blobSubSettings.classList.add("show");
   } else {
     blobSubSettings.classList.add("disabled-setting");
+    document.querySelector('[data-target="blobSubSettings"]').classList.remove("active");
+    blobSubSettings.classList.remove("show");
   }
 
   if (particlesEnabled) {
     particleSubSettings.classList.remove("disabled-setting");
   } else {
     particleSubSettings.classList.add("disabled-setting");
+    document.querySelector('[data-target="particleSubSettings"]').classList.remove("active");
+    particleSubSettings.classList.remove("show");
   }
 
   // Update active theme
