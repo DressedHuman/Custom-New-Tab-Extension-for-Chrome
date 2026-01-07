@@ -55,6 +55,7 @@ const blobColors = [
 ];
 
 const blobs = [];
+let blobsInteractionEnabled = true;
 
 let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 window.addEventListener("mousemove", (e) => {
@@ -113,14 +114,16 @@ function animateBlobs() {
     const dy = blob.y - mouse.y;
     const dist = Math.sqrt(dx * dx + dy * dy) || 0.0001;
 
-    if (dist < 150) {
-      const force = (150 - dist) * 0.05;
-      blob.vx += (dx / dist) * force;
-      blob.vy += (dy / dist) * force;
-    } else if (dist < 300) {
-      const force = (dist - 150) * 0.002;
-      blob.vx -= (dx / dist) * force;
-      blob.vy -= (dy / dist) * force;
+    if (blobsInteractionEnabled) {
+      if (dist < 150) {
+        const force = (150 - dist) * 0.05;
+        blob.vx += (dx / dist) * force;
+        blob.vy += (dy / dist) * force;
+      } else if (dist < 300) {
+        const force = (dist - 150) * 0.002;
+        blob.vx -= (dx / dist) * force;
+        blob.vy -= (dy / dist) * force;
+      }
     }
 
     blob.x += blob.vx;
@@ -508,6 +511,7 @@ const settingsBtn = document.getElementById("settingsBtn");
 const settingsModal = document.getElementById("settingsModal");
 const closeSettings = document.getElementById("closeSettings");
 const blobToggle = document.getElementById("blobToggle");
+const blobInteractionToggle = document.getElementById("blobInteractionToggle");
 const particleToggle = document.getElementById("particleToggle");
 const themeOptions = document.querySelectorAll(".theme-option");
 
@@ -531,6 +535,7 @@ settingsModal.addEventListener("click", (e) => {
 function updateSettingsUI() {
   // Update animation toggles
   blobToggle.checked = blobsEnabled;
+  blobInteractionToggle.checked = blobsInteractionEnabled;
   particleToggle.checked = particlesEnabled;
 
   // Update active theme
@@ -566,6 +571,11 @@ particleToggle.addEventListener("change", (e) => {
   toggleParticles(particlesEnabled);
 });
 
+blobInteractionToggle.addEventListener("change", (e) => {
+  blobsInteractionEnabled = e.target.checked;
+  localStorage.setItem("blobsInteractionEnabled", blobsInteractionEnabled);
+});
+
 function toggleBlobs(enabled) {
   if (enabled) {
     document.body.classList.remove("no-blob-anim");
@@ -591,6 +601,9 @@ function loadSettings() {
   const savedParticles = localStorage.getItem("particlesEnabled");
   particlesEnabled = savedParticles === null ? true : (savedParticles === "true");
   toggleParticles(particlesEnabled);
+
+  const savedInteraction = localStorage.getItem("blobsInteractionEnabled");
+  blobsInteractionEnabled = savedInteraction === null ? true : (savedInteraction === "true");
 }
 
 // Modify existing loops to respect the flag
