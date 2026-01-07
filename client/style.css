@@ -678,6 +678,7 @@ input:checked+.slider:before {
 .no-blob-anim .neon-blob {
     animation: none !important;
     transition: none !important;
+    display: none !important;
 }
 
 .no-particle-anim #particleCanvas {

@@ -89,16 +89,19 @@ window.addEventListener("mousemove", (e) => {
   mouse.y = e.clientY;
 });
 
+// Initial settings load for blobs
+const savedBlobs = localStorage.getItem("blobsEnabled");
+blobsEnabled = savedBlobs === null ? true : (savedBlobs === "true");
+const savedRandom = localStorage.getItem("blobsRandomPositionEnabled");
+blobsRandomPositionEnabled = savedRandom === null ? true : (savedRandom === "true");
+
 for (let i = 0; i < 6; i++) {
   const blob = document.createElement("div");
   blob.classList.add("neon-blob");
 
-  // Initial position and brightness
-  const savedRandom = localStorage.getItem("blobsRandomPositionEnabled");
-  blobsRandomPositionEnabled = savedRandom === null ? true : (savedRandom === "true");
-
   let color;
-  if (blobsRandomPositionEnabled) {
+  // Use random positions ONLY if blobs are enabled AND randomization is enabled
+  if (blobsEnabled && blobsRandomPositionEnabled) {
     color = blobColors[Math.floor(Math.random() * blobColors.length)];
     blob.x = Math.random() * window.innerWidth;
     blob.y = Math.random() * window.innerHeight;
@@ -106,6 +109,7 @@ for (let i = 0; i < 6; i++) {
     blob.blur = 20 + Math.random() * 40; // px
     blob.opacity = 0.2 + Math.random() * 0.2;
   } else {
+    // Default to fixed positions if blobs are disabled OR randomization is off
     color = blobColors[i % blobColors.length];
     const pos = DEFAULT_BLOB_POSITIONS[i % DEFAULT_BLOB_POSITIONS.length];
     blob.x = (pos.x / 100) * window.innerWidth;
@@ -137,6 +141,11 @@ for (let i = 0; i < 6; i++) {
 
   document.body.appendChild(blob);
   blobs.push(blob);
+}
+
+// Initial visibility state
+if (!blobsEnabled) {
+  document.body.classList.add("no-blob-anim");
 }
 
 // Animate blobs
