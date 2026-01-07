@@ -36,6 +36,9 @@ const saveBookmarkBtn = document.getElementById("saveBookmarkBtn");
 const bookmarkUrlInput = document.getElementById("bookmarkUrl");
 const bookmarkTitleInput = document.getElementById("bookmarkTitle");
 
+let bookmarks = [];
+let speeddialVisible = true;
+
 const terminal = document.getElementById("terminal");
 const terminalInput = document.getElementById("terminal-input");
 const terminalOutput = document.getElementById("terminal-output");
@@ -43,7 +46,12 @@ const terminalOutput = document.getElementById("terminal-output");
 let spaceHeld = false;
 let spaceTimer = null;
 let blobsEnabled = true;
+let blobsMovementEnabled = true;
+let blobsInteractionEnabled = true;
+let blobsRandomPositionEnabled = true;
 let particlesEnabled = true;
+let mouseParticlesEnabled = true;
+let autoParticlesEnabled = true;
 
 const themes = [
   "theme-neon",
@@ -65,10 +73,6 @@ const blobColors = [
 ];
 
 const blobs = [];
-blobsEnabled = true;
-let blobsMovementEnabled = true;
-let blobsInteractionEnabled = true;
-let blobsRandomPositionEnabled = true;
 
 const DEFAULT_BLOB_POSITIONS = [
   { x: 10, y: 15 },
@@ -342,8 +346,6 @@ canvas.width = innerWidth;
 canvas.height = innerHeight;
 
 particlesEnabled = true;
-let mouseParticlesEnabled = true;
-let autoParticlesEnabled = true;
 let particles = [];
 
 // --- Invisible random walker for particle trail ---
@@ -840,8 +842,6 @@ setInterval(checkActivation, 3600000);
 
 
 // --- BOOKMARKS SYSTEM ---
-let bookmarks = [];
-let speeddialVisible = true;
 
 // Load bookmarks
 function loadBookmarks() {
