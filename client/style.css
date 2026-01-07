@@ -621,7 +621,6 @@ input:checked+.slider:before {
 }
 
 .sub-row {
-    font-size: 0.9em;
     opacity: 0.8;
 }
 
