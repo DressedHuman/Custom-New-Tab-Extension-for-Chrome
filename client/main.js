@@ -75,12 +75,12 @@ const blobColors = [
 const blobs = [];
 
 const DEFAULT_BLOB_POSITIONS = [
-  { x: 10, y: 15 },
-  { x: 85, y: 10 },
-  { x: 15, y: 85 },
-  { x: 90, y: 80 },
-  { x: 30, y: 50 },
-  { x: 70, y: 45 }
+  { x: 10, y: 15, opacity: 0.25, glow: 40 },
+  { x: 85, y: 10, opacity: 0.2, glow: 30 },
+  { x: 15, y: 85, opacity: 0.3, glow: 45 },
+  { x: 90, y: 80, opacity: 0.22, glow: 35 },
+  { x: 30, y: 50, opacity: 0.18, glow: 25 },
+  { x: 70, y: 45, opacity: 0.28, glow: 42 }
 ];
 
 let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
@@ -97,27 +97,28 @@ for (let i = 0; i < 6; i++) {
   const color = blobColors[Math.floor(Math.random() * blobColors.length)];
   blob.dataset.color = color.join(",");
 
-  // Random glow, blur, and opacity
-  blob.glow = 15 + Math.random() * 30; // px
-  blob.blur = 20 + Math.random() * 40; // px
-  blob.opacity = 0.2 + Math.random() * 0.2;
-
-  blob.style.background = `rgba(${color.join(",")},${blob.opacity})`;
-  blob.style.filter = `blur(${blob.blur}px) drop-shadow(0 0 ${blob.glow
-    }px rgba(${color.join(",")},0.5))`;
-
-  // Initial position
+  // Initial position and brightness
   const savedRandom = localStorage.getItem("blobsRandomPositionEnabled");
   blobsRandomPositionEnabled = savedRandom === null ? true : (savedRandom === "true");
 
   if (blobsRandomPositionEnabled) {
     blob.x = Math.random() * window.innerWidth;
     blob.y = Math.random() * window.innerHeight;
+    blob.glow = 15 + Math.random() * 30; // px
+    blob.blur = 20 + Math.random() * 40; // px
+    blob.opacity = 0.2 + Math.random() * 0.2;
   } else {
     const pos = DEFAULT_BLOB_POSITIONS[i % DEFAULT_BLOB_POSITIONS.length];
     blob.x = (pos.x / 100) * window.innerWidth;
     blob.y = (pos.y / 100) * window.innerHeight;
+    blob.opacity = pos.opacity;
+    blob.glow = pos.glow;
+    blob.blur = 20 + Math.random() * 20; // Slight random blur for variety
   }
+
+  blob.style.background = `rgba(${color.join(",")},${blob.opacity})`;
+  blob.style.filter = `blur(${blob.blur}px) drop-shadow(0 0 ${blob.glow
+    }px rgba(${color.join(",")},0.5))`;
 
   // Random drift speed and direction
   blob.vx = (Math.random() - 0.5) * 0.3;
